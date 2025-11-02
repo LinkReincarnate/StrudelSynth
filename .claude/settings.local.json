@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:hacks.mozilla.org)",
+      "WebFetch(domain:dev.to)",
+      "Bash(pattern-engine-api.md)",
+      "Bash(transcription-api.md)",
+      "Bash(visualizer-api.md)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
