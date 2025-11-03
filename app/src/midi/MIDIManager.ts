@@ -8,12 +8,13 @@
  * Must connect to BOTH devices for full functionality!
  */
 
-import type { APCDevices, MIDIMessage, ButtonEvent, KnobEvent } from '../lib/types';
+import type { APCDevices, MIDIMessage, ButtonEvent, KnobEvent, KeyboardNoteEvent } from '../lib/types';
 import { MIDI_DEVICE_NAMES, BUTTON_NOTE_MAP, ALL_BUTTON_NOTES, KNOB_CC_MAP, ALL_KNOB_CCS, SPECIAL_BUTTONS, MIDI_STATUS } from '../lib/constants';
 
 export type MIDIMessageHandler = (message: MIDIMessage) => void;
 export type ButtonEventHandler = (event: ButtonEvent) => void;
 export type KnobEventHandler = (event: KnobEvent) => void;
+export type KeyboardNoteHandler = (event: KeyboardNoteEvent) => void;
 
 export class MIDIManager {
   private midiAccess: MIDIAccess | null = null;
@@ -23,6 +24,7 @@ export class MIDIManager {
   // Event handlers
   private buttonHandlers: ButtonEventHandler[] = [];
   private knobHandlers: KnobEventHandler[] = [];
+  private keyboardNoteHandlers: KeyboardNoteHandler[] = [];
   private rawHandlers: MIDIMessageHandler[] = [];
 
   /**
@@ -137,11 +139,17 @@ export class MIDIManager {
     // Notify raw handlers
     this.rawHandlers.forEach(handler => handler(message));
 
-    // Only process controller messages for buttons/knobs
-    if (source !== 'controller') return;
-
     const command = status & 0xf0;
 
+    // Process keyboard messages (from 25-key keyboard)
+    if (source === 'keyboard') {
+      if (command === MIDI_STATUS.NOTE_ON || command === MIDI_STATUS.NOTE_OFF) {
+        this.handleKeyboardNoteMessage(data1, data2, event.timeStamp, command === MIDI_STATUS.NOTE_ON);
+      }
+      return;
+    }
+
+    // Process controller messages (buttons, knobs)
     // Button press (Note On/Off)
     if (command === MIDI_STATUS.NOTE_ON || command === MIDI_STATUS.NOTE_OFF) {
       this.handleButtonMessage(data1, data2, event.timeStamp);
@@ -161,11 +169,7 @@ export class MIDIManager {
       this.shiftHeld = velocity > 0;
     }
 
-    // Only process button grid notes (0-39)
-    if (!ALL_BUTTON_NOTES.includes(note as any)) {
-      return;
-    }
-
+    // Create event for all buttons (grid + special)
     const event: ButtonEvent = {
       note,
       velocity,
@@ -173,6 +177,7 @@ export class MIDIManager {
       timestamp,
     };
 
+    // Send to handlers (they can filter if needed)
     this.buttonHandlers.forEach(handler => handler(event));
   }
 
@@ -205,6 +210,23 @@ export class MIDIManager {
     };
 
     this.knobHandlers.forEach(handler => handler(event));
+  }
+
+  /**
+   * Handle keyboard note on/off (from 25-key keyboard)
+   */
+  private handleKeyboardNoteMessage(pitch: number, velocity: number, timestamp: number, isNoteOn: boolean): void {
+    // Note off can be either NOTE_OFF or NOTE_ON with velocity 0
+    const actualIsNoteOn = isNoteOn && velocity > 0;
+
+    const event: KeyboardNoteEvent = {
+      pitch,
+      velocity,
+      timestamp,
+      isNoteOn: actualIsNoteOn,
+    };
+
+    this.keyboardNoteHandlers.forEach(handler => handler(event));
   }
 
   /**
@@ -269,6 +291,17 @@ export class MIDIManager {
   }
 
   /**
+   * Register keyboard note event handler
+   */
+  onKeyboardNote(handler: KeyboardNoteHandler): () => void {
+    this.keyboardNoteHandlers.push(handler);
+    return () => {
+      const index = this.keyboardNoteHandlers.indexOf(handler);
+      if (index > -1) this.keyboardNoteHandlers.splice(index, 1);
+    };
+  }
+
+  /**
    * Register raw MIDI message handler
    */
   onMIDI(handler: MIDIMessageHandler): () => void {
@@ -290,6 +323,7 @@ export class MIDIManager {
 
     this.buttonHandlers = [];
     this.knobHandlers = [];
+    this.keyboardNoteHandlers = [];
     this.rawHandlers = [];
     this.devices = null;
     this.midiAccess = null;

@@ -11,6 +11,8 @@
 
 import type { Pattern, PatternSlot, PatternLibrary } from '../lib/types';
 import { DEFAULT_PATTERN_LIBRARY, LED_COLORS } from '../lib/constants';
+import type { KnobParameter } from '../lib/parameters';
+import { DEFAULT_KNOB_PARAMETERS, applyParameters, scaleValue } from '../lib/parameters';
 
 export type PatternStateChangeHandler = (slot: PatternSlot) => void;
 export type PatternErrorHandler = (slotId: number, error: Error) => void;
@@ -21,6 +23,9 @@ export class PatternEngine {
   private activeSlots: Map<number, PatternSlot>; // Changed: store slots instead of Pattern objects
   private combinedPattern: Pattern | null = null; // Single stacked pattern
   private initialized = false;
+
+  // Currently selected slot for parameter control
+  private selectedSlotId: number | null = null;
 
   // Event handlers
   private stateChangeHandlers: PatternStateChangeHandler[] = [];
@@ -70,7 +75,12 @@ export class PatternEngine {
 
     // Load all slots
     library.slots.forEach(slot => {
-      this.slots.set(slot.id, { ...slot });
+      const slotCopy = { ...slot };
+      // Initialize parameters for this slot if not already set
+      if (!slotCopy.parameters) {
+        slotCopy.parameters = DEFAULT_KNOB_PARAMETERS.map(p => ({ ...p }));
+      }
+      this.slots.set(slot.id, slotCopy);
     });
 
     console.log(`✅ Loaded library: ${library.name} (${library.slots.length} patterns)`);
@@ -141,20 +151,28 @@ export class PatternEngine {
   private rebuildCombinedPattern(): void {
     // Stop existing combined pattern
     if (this.combinedPattern) {
+      console.log('🔇 Calling hush() on existing combined pattern');
       this.combinedPattern.hush();
       this.combinedPattern = null;
+      console.log('✅ Existing pattern hushed and cleared');
     }
 
-    // If no active patterns, we're done
+    // If no active patterns, call global hush to ensure everything stops
     if (this.activeSlots.size === 0) {
-      console.log('🔇 No active patterns');
+      console.log('🔇 No active patterns - calling global hush()');
+      if (typeof window.hush === 'function') {
+        window.hush();
+      }
       return;
     }
 
     try {
-      // Collect all active pattern codes
+      // Collect all active pattern codes and apply each slot's own parameters
       const activeCodes = Array.from(this.activeSlots.values())
-        .map(slot => slot.code);
+        .map(slot => {
+          const params = slot.parameters || DEFAULT_KNOB_PARAMETERS;
+          return applyParameters(slot.code, params);
+        });
 
       // Build combined pattern using stack()
       let combinedCode: string;
@@ -166,7 +184,7 @@ export class PatternEngine {
         combinedCode = `stack(${activeCodes.join(', ')})`;
       }
 
-      console.log(`🎵 Building combined pattern: ${combinedCode}`);
+      console.log(`🎵 Building combined pattern with per-pattern parameters`);
 
       // Evaluate and play combined pattern
       this.combinedPattern = this.evaluatePattern(combinedCode);
@@ -239,13 +257,16 @@ export class PatternEngine {
     }
 
     if (!this.activeSlots.has(slotId)) {
-      console.log(`Pattern ${slotId} not playing`);
+      console.log(`⚠️ Pattern ${slotId} not playing - cannot stop`);
       return;
     }
+
+    console.log(`🛑 Stopping pattern ${slotId}: ${slot.name}`);
 
     try {
       // Remove from active slots
       this.activeSlots.delete(slotId);
+      console.log(`Removed from active slots. Remaining active: ${this.activeSlots.size}`);
 
       // Update slot state
       slot.isPlaying = false;
@@ -418,5 +439,99 @@ export class PatternEngine {
    */
   isInitialized(): boolean {
     return this.initialized;
+  }
+
+  /**
+   * Set the currently selected slot for parameter control
+   * @param slotId Slot ID (0-39) or null for no selection
+   */
+  selectSlot(slotId: number | null): void {
+    this.selectedSlotId = slotId;
+    if (slotId !== null) {
+      console.log(`🎯 Selected slot ${slotId} for parameter control`);
+    }
+  }
+
+  /**
+   * Get the currently selected slot ID
+   * @returns Selected slot ID or null
+   */
+  getSelectedSlotId(): number | null {
+    return this.selectedSlotId;
+  }
+
+  /**
+   * Update a parameter value for the selected slot (relative encoder)
+   * @param knobIndex Knob index (0-7)
+   * @param delta Relative change value (+/-)
+   */
+  updateParameter(knobIndex: number, delta: number): void {
+    // Need a selected slot to update
+    if (this.selectedSlotId === null) {
+      console.log('⚠️ No slot selected for parameter control');
+      return;
+    }
+
+    const slot = this.slots.get(this.selectedSlotId);
+    if (!slot || !slot.parameters) return;
+
+    const param = slot.parameters[knobIndex];
+    if (!param) return;
+
+    // Calculate step size based on range
+    const range = param.maxValue - param.minValue;
+    const stepSize = range / 127; // 127 steps across full range
+
+    // Apply delta
+    let newValue = param.currentValue + (delta * stepSize);
+
+    // Clamp to range
+    newValue = Math.max(param.minValue, Math.min(param.maxValue, newValue));
+
+    param.currentValue = newValue;
+
+    console.log(`🎛️ Slot ${this.selectedSlotId} - ${param.name}: ${param.currentValue.toFixed(2)}`);
+
+    // If this slot is currently playing, rebuild the combined pattern
+    if (this.activeSlots.has(this.selectedSlotId)) {
+      this.rebuildCombinedPattern();
+    }
+  }
+
+  /**
+   * Get parameter values for the selected slot
+   * @returns Array of parameters for selected slot, or default params if no selection
+   */
+  getParameters(): KnobParameter[] {
+    if (this.selectedSlotId === null) {
+      return [...DEFAULT_KNOB_PARAMETERS];
+    }
+
+    const slot = this.slots.get(this.selectedSlotId);
+    if (!slot || !slot.parameters) {
+      return [...DEFAULT_KNOB_PARAMETERS];
+    }
+
+    return slot.parameters;
+  }
+
+  /**
+   * Reset parameters to defaults for the selected slot
+   */
+  resetParameters(): void {
+    if (this.selectedSlotId === null) return;
+
+    const slot = this.slots.get(this.selectedSlotId);
+    if (!slot) return;
+
+    // Reset to defaults
+    slot.parameters = DEFAULT_KNOB_PARAMETERS.map(p => ({ ...p }));
+
+    // Rebuild if playing
+    if (this.activeSlots.has(this.selectedSlotId)) {
+      this.rebuildCombinedPattern();
+    }
+
+    console.log(`🔄 Parameters reset for slot ${this.selectedSlotId}`);
   }
 }

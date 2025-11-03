@@ -26,6 +26,9 @@ export interface PatternSlot {
 
   /** Timestamp of last modification */
   lastModified?: number;
+
+  /** Per-pattern parameter values (8 knobs) */
+  parameters?: import('./parameters').KnobParameter[];
 }
 
 /**
@@ -206,6 +209,88 @@ export interface AppState {
 
   /** Error messages */
   errors: string[];
+}
+
+/**
+ * Recorded MIDI note with timing information
+ */
+export interface RecordedNote {
+  /** MIDI note number (0-127) */
+  pitch: number;
+
+  /** Note velocity (0-127) */
+  velocity: number;
+
+  /** Timestamp when note started (ms) */
+  startTime: number;
+
+  /** Note duration (ms) */
+  duration: number;
+}
+
+/**
+ * Quantized note aligned to grid
+ */
+export interface QuantizedNote {
+  /** MIDI note number (0-127) */
+  pitch: number;
+
+  /** Note velocity (0-127) */
+  velocity: number;
+
+  /** Grid position (0-based step number) */
+  step: number;
+
+  /** Duration in grid steps */
+  durationSteps: number;
+}
+
+/**
+ * Recording state
+ */
+export type RecordingState = 'idle' | 'armed' | 'recording' | 'stopped';
+
+/**
+ * Complete MIDI recording
+ */
+export interface Recording {
+  /** Recorded notes */
+  notes: RecordedNote[];
+
+  /** Recording start timestamp (ms) */
+  startTime: number;
+
+  /** Recording end timestamp (ms) */
+  endTime: number;
+
+  /** Detected tempo (BPM) - null if not detected yet */
+  detectedTempo: number | null;
+
+  /** Quantization grid (16 = 1/16, 8 = 1/8, 4 = 1/4, etc.) */
+  quantizeGrid: number;
+
+  /** Current recording state */
+  state: RecordingState;
+
+  /** Target slot for this recording */
+  targetSlot: number | null;
+}
+
+/**
+ * Keyboard note event (from 25-key keyboard)
+ */
+export interface KeyboardNoteEvent {
+  /** MIDI note number (0-127) */
+  pitch: number;
+
+  /** Note velocity (0-127, 0 = note off) */
+  velocity: number;
+
+  /** Timestamp */
+  timestamp: number;
+
+  /** True if note on, false if note off */
+  isNoteOn: boolean;
 }
 
 /**
