@@ -9,7 +9,8 @@
       "WebFetch(domain:dev.to)",
       "Bash(pattern-engine-api.md)",
       "Bash(transcription-api.md)",
-      "Bash(visualizer-api.md)"
+      "Bash(visualizer-api.md)",
+      "WebFetch(domain:strudel.cc)"
     ],
     "deny": [],
     "ask": []

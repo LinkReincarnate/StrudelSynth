@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel CDN Test</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #5a5a5a;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+  </style>
+</head>
+<body>
+  <h1>🎵 Strudel CDN Integration Test</h1>
+
+  <div class="status" id="status">
+    <p>Status: <span id="statusText">Not initialized</span></p>
+  </div>
+
+  <div>
+    <button id="initBtn">1. Initialize Strudel</button>
+    <button id="playBtn" disabled>2. Play Pattern</button>
+    <button id="stopBtn" disabled>3. Stop Pattern</button>
+    <button id="layerBtn" disabled>4. Layer Patterns</button>
+    <button id="stopAllBtn" disabled>5. Stop All</button>
+  </div>
+
+  <h2>Test Results:</h2>
+  <ul id="results"></ul>
+
+  <script>
+    let pattern1 = null;
+    let pattern2 = null;
+    let initialized = false;
+
+    const status = document.getElementById('statusText');
+    const results = document.getElementById('results');
+
+    function log(message, isSuccess = true) {
+      const li = document.createElement('li');
+      li.className = isSuccess ? 'success' : 'error';
+      li.textContent = message;
+      results.appendChild(li);
+    }
+
+    function updateStatus(text, isSuccess = true) {
+      status.textContent = text;
+      status.className = isSuccess ? 'success' : 'error';
+    }
+
+    // Test 1: Initialize
+    document.getElementById('initBtn').addEventListener('click', async () => {
+      try {
+        updateStatus('Initializing...');
+
+        // Check if initStrudel exists
+        if (typeof initStrudel === 'undefined') {
+          throw new Error('initStrudel is not defined - CDN not loaded correctly');
+        }
+
+        await initStrudel();
+        initialized = true;
+
+        log('✅ Strudel initialized successfully');
+        updateStatus('Initialized - Ready to play');
+
+        // Enable other buttons
+        document.getElementById('playBtn').disabled = false;
+        document.getElementById('layerBtn').disabled = false;
+
+      } catch (error) {
+        log('❌ Initialization failed: ' + error.message, false);
+        updateStatus('Error: ' + error.message, false);
+      }
+    });
+
+    // Test 2: Play simple pattern
+    document.getElementById('playBtn').addEventListener('click', () => {
+      try {
+        if (!initialized) {
+          throw new Error('Strudel not initialized');
+        }
+
+        // Test pattern evaluation
+        pattern1 = note('c4 e4 g4').s('piano');
+        pattern1.play();
+
+        log('✅ Pattern playing: note("c4 e4 g4").s("piano")');
+        updateStatus('Playing pattern...');
+
+        document.getElementById('stopBtn').disabled = false;
+
+      } catch (error) {
+        log('❌ Play failed: ' + error.message, false);
+        updateStatus('Error: ' + error.message, false);
+      }
+    });
+
+    // Test 3: Stop pattern
+    document.getElementById('stopBtn').addEventListener('click', () => {
+      try {
+        if (pattern1) {
+          pattern1.stop();
+          log('✅ Pattern stopped');
+          updateStatus('Pattern stopped');
+          document.getElementById('stopBtn').disabled = true;
+        }
+      } catch (error) {
+        log('❌ Stop failed: ' + error.message, false);
+      }
+    });
+
+    // Test 4: Layer multiple patterns
+    document.getElementById('layerBtn').addEventListener('click', () => {
+      try {
+        if (!initialized) {
+          throw new Error('Strudel not initialized');
+        }
+
+        // Play two patterns simultaneously
+        pattern1 = s('bd').fast(2);
+        pattern2 = s('hh*8');
+
+        pattern1.play();
+        pattern2.play();
+
+        log('✅ Layering: s("bd").fast(2) + s("hh*8")');
+        updateStatus('Playing layered patterns');
+
+        document.getElementById('stopAllBtn').disabled = false;
+
+      } catch (error) {
+        log('❌ Layering failed: ' + error.message, false);
+        updateStatus('Error: ' + error.message, false);
+      }
+    });
+
+    // Test 5: Stop all patterns
+    document.getElementById('stopAllBtn').addEventListener('click', () => {
+      try {
+        if (pattern1) pattern1.stop();
+        if (pattern2) pattern2.stop();
+
+        log('✅ All patterns stopped');
+        updateStatus('All stopped');
+
+        document.getElementById('stopAllBtn').disabled = true;
+
+      } catch (error) {
+        log('❌ Stop all failed: ' + error.message, false);
+      }
+    });
+
+    // Check if Strudel loaded
+    window.addEventListener('load', () => {
+      if (typeof initStrudel !== 'undefined') {
+        log('✅ Strudel CDN loaded successfully');
+        updateStatus('CDN loaded - click Initialize');
+      } else {
+        log('❌ Strudel CDN failed to load', false);
+        updateStatus('CDN load failed', false);
+      }
+    });
+  </script>
+</body>
+</html>

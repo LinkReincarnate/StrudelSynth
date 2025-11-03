@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIDI Connection Test - APCKEY25 mk2</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #0a0a0a;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      color: #4caf50;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    .status-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #888;
+    }
+    .status-box.connected {
+      border-left-color: #4caf50;
+    }
+    .status-box.error {
+      border-left-color: #f44336;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    button:hover { background: #5a5a5a; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.primary { background: #4caf50; }
+    button.primary:hover { background: #45a049; }
+    button.danger { background: #f44336; }
+    button.danger:hover { background: #d32f2f; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .button-cell {
+      aspect-ratio: 1;
+      border: 2px solid #333;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #666;
+      transition: all 0.1s;
+    }
+    .button-cell.pressed {
+      background: #4caf50;
+      border-color: #4caf50;
+      color: #000;
+      font-weight: bold;
+      transform: scale(0.95);
+    }
+    .knob-display {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .knob {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .knob-value {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4caf50;
+      margin: 10px 0;
+    }
+    .knob-label {
+      color: #888;
+      font-size: 12px;
+    }
+    .log {
+      background: #000;
+      padding: 15px;
+      border-radius: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .info { color: #2196f3; }
+    .warning { color: #ff9800; }
+    .controls {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .led-test {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎹 MIDI Connection Test</h1>
+  <p class="subtitle">APCKEY25 mk2 Dual-Device Integration</p>
+
+  <div class="status-box" id="statusBox">
+    <h3>Connection Status: <span id="statusText">Not connected</span></h3>
+    <div id="statusDetails" style="margin-top: 10px; font-size: 14px; color: #888;"></div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="connectBtn">Connect MIDI</button>
+    <button id="disconnectBtn" disabled>Disconnect</button>
+    <button id="clearLEDsBtn" disabled>Clear All LEDs</button>
+  </div>
+
+  <h2>🎨 LED Color Test</h2>
+  <p style="color: #888; margin-bottom: 15px;">Click to light up all buttons with different colors</p>
+  <div class="led-test">
+    <button id="ledRed" disabled>🔴 Red (All Buttons)</button>
+    <button id="ledGreen" disabled>🟢 Green (All Buttons)</button>
+    <button id="ledYellow" disabled>🟡 Yellow (All Buttons)</button>
+    <button id="ledOff" disabled>⚫ Off (All Buttons)</button>
+  </div>
+
+  <h2>🎮 Button Grid (5x8 = 40 buttons)</h2>
+  <p style="color: #888; margin-bottom: 15px;">Press buttons on your APCKEY25 mk2 - they'll light up here</p>
+  <div class="grid" id="buttonGrid"></div>
+
+  <h2>🎛️ Knobs (CC 48-55)</h2>
+  <p style="color: #888; margin-bottom: 15px;">Turn knobs on your APCKEY25 mk2 - values will update here</p>
+  <div class="knob-display" id="knobDisplay"></div>
+
+  <h2>📊 Event Log</h2>
+  <div class="log" id="log"></div>
+
+  <script type="module">
+    // Import constants (copy from constants.ts for standalone test)
+    const LED_COLORS = {
+      OFF: 0,
+      RED: 5,
+      GREEN: 13,
+      YELLOW: 96,
+    };
+
+    const ALL_BUTTON_NOTES = [
+      32, 33, 34, 35, 36, 37, 38, 39,  // Row 0
+      24, 25, 26, 27, 28, 29, 30, 31,  // Row 1
+      16, 17, 18, 19, 20, 21, 22, 23,  // Row 2
+      8, 9, 10, 11, 12, 13, 14, 15,    // Row 3
+      0, 1, 2, 3, 4, 5, 6, 7,          // Row 4
+    ];
+
+    const MIDI_DEVICE_NAMES = {
+      KEYBOARD: 'APC Key 25 mk2',
+      CONTROLLER_INPUT: 'MIDIIN2 (APC Key 25 mk2)',
+      CONTROLLER_OUTPUT: 'MIDIOUT2 (APC Key 25 mk2)',
+    };
+
+    // State
+    let midiAccess = null;
+    let devices = null;
+    let knobValues = [0, 0, 0, 0, 0, 0, 0, 0];
+    let buttonStates = new Map();
+
+    // UI elements
+    const statusBox = document.getElementById('statusBox');
+    const statusText = document.getElementById('statusText');
+    const statusDetails = document.getElementById('statusDetails');
+    const logEl = document.getElementById('log');
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.className = type;
+      line.textContent = `[${timestamp}] ${message}`;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function updateStatus(text, details, connected = false) {
+      statusText.textContent = text;
+      statusDetails.innerHTML = details;
+      statusBox.className = connected ? 'status-box connected' : 'status-box';
+    }
+
+    // Create button grid
+    function createButtonGrid() {
+      const grid = document.getElementById('buttonGrid');
+      ALL_BUTTON_NOTES.forEach(note => {
+        const cell = document.createElement('div');
+        cell.className = 'button-cell';
+        cell.textContent = note;
+        cell.id = `btn-${note}`;
+        grid.appendChild(cell);
+      });
+    }
+
+    // Create knob display
+    function createKnobDisplay() {
+      const display = document.getElementById('knobDisplay');
+      for (let i = 0; i < 8; i++) {
+        const knob = document.createElement('div');
+        knob.className = 'knob';
+        knob.innerHTML = `
+          <div class="knob-label">Knob ${i + 1} (CC ${48 + i})</div>
+          <div class="knob-value" id="knob-${i}">0</div>
+        `;
+        display.appendChild(knob);
+      }
+    }
+
+    // Connect to MIDI
+    async function connect() {
+      try {
+        log('Requesting MIDI access...', 'info');
+        updateStatus('Connecting...', 'Requesting MIDI access...');
+
+        midiAccess = await navigator.requestMIDIAccess();
+        log('✅ MIDI access granted', 'success');
+
+        // Find devices
+        let keyboardInput = null;
+        let controllerInput = null;
+        let controllerOutput = null;
+
+        for (const input of midiAccess.inputs.values()) {
+          log(`Found input: ${input.name}`, 'info');
+          if (input.name === MIDI_DEVICE_NAMES.KEYBOARD) {
+            keyboardInput = input;
+          } else if (input.name === MIDI_DEVICE_NAMES.CONTROLLER_INPUT) {
+            controllerInput = input;
+          }
+        }
+
+        for (const output of midiAccess.outputs.values()) {
+          log(`Found output: ${output.name}`, 'info');
+          if (output.name === MIDI_DEVICE_NAMES.CONTROLLER_OUTPUT) {
+            controllerOutput = output;
+          }
+        }
+
+        if (!keyboardInput || !controllerInput || !controllerOutput) {
+          throw new Error('APCKEY25 mk2 not found. Please connect the device.');
+        }
+
+        devices = {
+          keyboard: { input: keyboardInput },
+          controller: { input: controllerInput, output: controllerOutput },
+        };
+
+        // Setup listeners
+        devices.controller.input.onmidimessage = handleMIDIMessage;
+
+        log('✅ Connected to APCKEY25 mk2', 'success');
+        updateStatus('Connected', `
+          <span class="success">✓ Keyboard: ${keyboardInput.name}</span><br>
+          <span class="success">✓ Controller In: ${controllerInput.name}</span><br>
+          <span class="success">✓ Controller Out: ${controllerOutput.name}</span><br>
+          <span class="info">Press buttons or turn knobs to test!</span>
+        `, true);
+
+        // Enable buttons
+        document.getElementById('connectBtn').disabled = true;
+        document.getElementById('disconnectBtn').disabled = false;
+        document.getElementById('clearLEDsBtn').disabled = false;
+        document.getElementById('ledRed').disabled = false;
+        document.getElementById('ledGreen').disabled = false;
+        document.getElementById('ledYellow').disabled = false;
+        document.getElementById('ledOff').disabled = false;
+
+      } catch (error) {
+        log(`❌ Connection failed: ${error.message}`, 'error');
+        updateStatus('Error', `<span class="error">${error.message}</span>`);
+        statusBox.className = 'status-box error';
+      }
+    }
+
+    // Handle MIDI message
+    function handleMIDIMessage(event) {
+      const [status, data1, data2] = event.data;
+      const command = status & 0xf0;
+
+      // Button press (Note On/Off)
+      if (command === 0x90 || command === 0x80) {
+        handleButton(data1, data2);
+      }
+      // Knob change (CC)
+      else if (command === 0xb0) {
+        handleKnob(data1, data2);
+      }
+    }
+
+    // Handle button
+    function handleButton(note, velocity) {
+      if (!ALL_BUTTON_NOTES.includes(note)) return;
+
+      const cell = document.getElementById(`btn-${note}`);
+      if (cell) {
+        if (velocity > 0) {
+          cell.classList.add('pressed');
+          buttonStates.set(note, true);
+          log(`Button ${note} pressed (velocity ${velocity})`, 'success');
+        } else {
+          cell.classList.remove('pressed');
+          buttonStates.delete(note);
+          log(`Button ${note} released`, 'info');
+        }
+      }
+    }
+
+    // Handle knob
+    function handleKnob(cc, value) {
+      const index = cc - 48;
+      if (index < 0 || index > 7) return;
+
+      // Convert to delta
+      let delta = 0;
+      if (value >= 1 && value <= 63) {
+        delta = value;
+      } else if (value >= 65 && value <= 127) {
+        delta = -(128 - value);
+      }
+
+      // Update value
+      knobValues[index] += delta;
+      knobValues[index] = Math.max(0, Math.min(127, knobValues[index]));
+
+      // Update display
+      document.getElementById(`knob-${index}`).textContent = knobValues[index];
+      log(`Knob ${index + 1} (CC ${cc}): ${delta > 0 ? '+' : ''}${delta} → ${knobValues[index]}`, 'info');
+    }
+
+    // Set LED
+    function setLED(note, color) {
+      if (!devices) return;
+      devices.controller.output.send([0x90, note, color]);
+    }
+
+    // Set all LEDs
+    function setAllLEDs(color) {
+      ALL_BUTTON_NOTES.forEach(note => setLED(note, color));
+      log(`Set all LEDs to ${color === 0 ? 'OFF' : color === 5 ? 'RED' : color === 13 ? 'GREEN' : 'YELLOW'}`, 'success');
+    }
+
+    // Event listeners
+    document.getElementById('connectBtn').addEventListener('click', connect);
+
+    document.getElementById('disconnectBtn').addEventListener('click', () => {
+      if (devices) {
+        devices.controller.input.onmidimessage = null;
+        devices = null;
+      }
+      log('Disconnected', 'warning');
+      updateStatus('Disconnected', '');
+      document.getElementById('connectBtn').disabled = false;
+      document.getElementById('disconnectBtn').disabled = true;
+      document.getElementById('clearLEDsBtn').disabled = true;
+      document.getElementById('ledRed').disabled = true;
+      document.getElementById('ledGreen').disabled = true;
+      document.getElementById('ledYellow').disabled = true;
+      document.getElementById('ledOff').disabled = true;
+    });
+
+    document.getElementById('clearLEDsBtn').addEventListener('click', () => setAllLEDs(LED_COLORS.OFF));
+    document.getElementById('ledRed').addEventListener('click', () => setAllLEDs(LED_COLORS.RED));
+    document.getElementById('ledGreen').addEventListener('click', () => setAllLEDs(LED_COLORS.GREEN));
+    document.getElementById('ledYellow').addEventListener('click', () => setAllLEDs(LED_COLORS.YELLOW));
+    document.getElementById('ledOff').addEventListener('click', () => setAllLEDs(LED_COLORS.OFF));
+
+    // Initialize UI
+    createButtonGrid();
+    createKnobDisplay();
+    log('MIDI test page loaded', 'info');
+    log('Click "Connect MIDI" to start', 'info');
+  </script>
+</body>
+</html>

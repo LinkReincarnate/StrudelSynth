@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel Layering Test</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #0a0a0a;
+      color: #fff;
+    }
+    h1 { color: #4caf50; }
+    button {
+      padding: 15px 25px;
+      font-size: 16px;
+      margin: 10px 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    button:hover { background: #5a5a5a; }
+    button.danger { background: #f44336; }
+    .test-section {
+      background: #1a1a1a;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border-left: 4px solid #4a4a4a;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .info { color: #2196f3; }
+    pre {
+      background: #000;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="overlay">
+    <div style="text-align: center;">
+      <h1>🎵 Strudel Layering Test</h1>
+      <p style="font-size: 1.5rem;">Click to start</p>
+    </div>
+  </div>
+
+  <h1>🎵 Strudel Pattern Layering Diagnostic</h1>
+
+  <div class="test-section">
+    <h2>Approach 1: Separate .play() calls (Current Method)</h2>
+    <p>This is what we're currently doing. Does it work?</p>
+    <pre>const p1 = s('bd').play();
+const p2 = s('hh*8').play();</pre>
+    <button onclick="test1()">Test Approach 1</button>
+    <button class="danger" onclick="hush()">Stop</button>
+  </div>
+
+  <div class="test-section">
+    <h2>Approach 2: Stack patterns before playing</h2>
+    <p>Combine patterns into one with stack()</p>
+    <pre>stack(s('bd'), s('hh*8')).play();</pre>
+    <button onclick="test2()">Test Approach 2</button>
+    <button class="danger" onclick="hush()">Stop</button>
+  </div>
+
+  <div class="test-section">
+    <h2>Approach 3: Comma notation (combined pattern)</h2>
+    <p>Use Strudel's comma notation</p>
+    <pre>s('bd, hh*8').play();</pre>
+    <button onclick="test3()">Test Approach 3</button>
+    <button class="danger" onclick="hush()">Stop</button>
+  </div>
+
+  <div class="test-section">
+    <h2>Approach 4: Layer with .layer()</h2>
+    <p>Use .layer() method if it exists</p>
+    <pre>s('bd').layer(s('hh*8')).play();</pre>
+    <button onclick="test4()">Test Approach 4</button>
+    <button class="danger" onclick="hush()">Stop</button>
+  </div>
+
+  <div class="test-section">
+    <h2>Approach 5: Different scheduler contexts</h2>
+    <p>Create separate schedulers or orbits</p>
+    <pre>s('bd').orbit(0).play();
+s('hh*8').orbit(1).play();</pre>
+    <button onclick="test5()">Test Approach 5</button>
+    <button class="danger" onclick="hush()">Stop</button>
+  </div>
+
+  <h2>Results:</h2>
+  <ul id="results"></ul>
+
+  <script>
+    let ready = false;
+    const results = document.getElementById('results');
+
+    function log(msg, type = 'info') {
+      const li = document.createElement('li');
+      li.className = type;
+      li.textContent = msg;
+      results.appendChild(li);
+    }
+
+    document.getElementById('overlay').addEventListener('click', async () => {
+      try {
+        log('Initializing Strudel...', 'info');
+        await window.initStrudel({
+          prebake: () => window.samples('github:tidalcycles/dirt-samples'),
+        });
+        ready = true;
+        log('✅ Ready! Test each approach and listen carefully', 'success');
+        log('You should hear BOTH kick drum AND hi-hat playing together', 'info');
+        document.getElementById('overlay').style.display = 'none';
+      } catch (error) {
+        log(`❌ Init failed: ${error.message}`, 'error');
+      }
+    });
+
+    function test1() {
+      if (!ready) { alert('Click overlay first!'); return; }
+      try {
+        log('TEST 1: Separate .play() calls...', 'info');
+        const p1 = s('bd').play();
+        const p2 = s('hh*8').play();
+        log('✅ Called p1.play() and p2.play()', 'success');
+        log('🎧 Do you hear BOTH kick and hi-hat?', 'info');
+      } catch (error) {
+        log(`❌ Test 1 failed: ${error.message}`, 'error');
+      }
+    }
+
+    function test2() {
+      if (!ready) { alert('Click overlay first!'); return; }
+      try {
+        log('TEST 2: Using stack()...', 'info');
+        if (typeof stack === 'undefined') {
+          log('❌ stack() function not available', 'error');
+          return;
+        }
+        stack(s('bd'), s('hh*8')).play();
+        log('✅ Called stack(p1, p2).play()', 'success');
+        log('🎧 Do you hear BOTH kick and hi-hat?', 'info');
+      } catch (error) {
+        log(`❌ Test 2 failed: ${error.message}`, 'error');
+      }
+    }
+
+    function test3() {
+      if (!ready) { alert('Click overlay first!'); return; }
+      try {
+        log('TEST 3: Comma notation...', 'info');
+        s('bd, hh*8').play();
+        log('✅ Called s("bd, hh*8").play()', 'success');
+        log('🎧 Do you hear BOTH kick and hi-hat?', 'info');
+      } catch (error) {
+        log(`❌ Test 3 failed: ${error.message}`, 'error');
+      }
+    }
+
+    function test4() {
+      if (!ready) { alert('Click overlay first!'); return; }
+      try {
+        log('TEST 4: Using .layer()...', 'info');
+        const p1 = s('bd');
+        if (typeof p1.layer !== 'function') {
+          log('❌ .layer() method not available', 'error');
+          return;
+        }
+        p1.layer(s('hh*8')).play();
+        log('✅ Called p1.layer(p2).play()', 'success');
+        log('🎧 Do you hear BOTH kick and hi-hat?', 'info');
+      } catch (error) {
+        log(`❌ Test 4 failed: ${error.message}`, 'error');
+      }
+    }
+
+    function test5() {
+      if (!ready) { alert('Click overlay first!'); return; }
+      try {
+        log('TEST 5: Using .orbit()...', 'info');
+        const p1 = s('bd');
+        if (typeof p1.orbit !== 'function') {
+          log('❌ .orbit() method not available', 'error');
+          log('ℹ️ Trying without orbit...', 'info');
+          s('bd').play();
+          setTimeout(() => s('hh*8').play(), 100);
+          log('✅ Started with 100ms delay', 'success');
+          log('🎧 Do you hear BOTH kick and hi-hat?', 'info');
+          return;
+        }
+        s('bd').orbit(0).play();
+        s('hh*8').orbit(1).play();
+        log('✅ Called with different orbits', 'success');
+        log('🎧 Do you hear BOTH kick and hi-hat?', 'info');
+      } catch (error) {
+        log(`❌ Test 5 failed: ${error.message}`, 'error');
+      }
+    }
+  </script>
+</body>
+</html>

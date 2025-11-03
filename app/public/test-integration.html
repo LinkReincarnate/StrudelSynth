@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrudelSynth Integration Test</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1400px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #0a0a0a;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      color: #4caf50;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+      font-size: 18px;
+    }
+    .status-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .status-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      border-left: 4px solid #888;
+    }
+    .status-box.ready {
+      border-left-color: #4caf50;
+    }
+    .status-box.error {
+      border-left-color: #f44336;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    button:hover { background: #5a5a5a; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.primary { background: #4caf50; }
+    button.primary:hover { background: #45a049; }
+    button.danger { background: #f44336; }
+    button.danger:hover { background: #d32f2f; }
+    .controls {
+      text-align: center;
+      margin: 30px 0;
+    }
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .pattern-cell {
+      aspect-ratio: 1;
+      border: 2px solid #333;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: #666;
+      transition: all 0.2s;
+      cursor: pointer;
+      padding: 5px;
+      text-align: center;
+    }
+    .pattern-cell:hover {
+      border-color: #4caf50;
+      background: #1a1a1a;
+    }
+    .pattern-cell.playing {
+      border-color: #4caf50;
+      background: #1a3a1a;
+      color: #4caf50;
+      font-weight: bold;
+    }
+    .pattern-cell .note {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    .pattern-cell .name {
+      font-size: 9px;
+      line-height: 1.2;
+    }
+    .info-panel {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .info-panel h3 {
+      margin-top: 0;
+      color: #4caf50;
+    }
+    .playing-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .playing-badge {
+      background: #4caf50;
+      color: #000;
+      padding: 5px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .log {
+      background: #000;
+      padding: 15px;
+      border-radius: 4px;
+      max-height: 250px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .info { color: #2196f3; }
+    .warning { color: #ff9800; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.97);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .overlay-content {
+      text-align: center;
+    }
+    .overlay h1 { font-size: 4rem; margin-bottom: 1rem; }
+    .overlay p { font-size: 1.8rem; }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="audioOverlay">
+    <div class="overlay-content">
+      <h1>🎵 StrudelSynth</h1>
+      <p>Click anywhere to enable audio</p>
+      <p style="font-size: 1rem; color: #666; margin-top: 1rem;">
+        Press buttons on your APCKEY25 mk2 to play patterns!
+      </p>
+    </div>
+  </div>
+
+  <h1>🎵 StrudelSynth - Full Integration Test</h1>
+  <p class="subtitle">MIDI + Strudel + Pattern Engine</p>
+
+  <div class="status-grid">
+    <div class="status-box" id="midiStatus">
+      <h3>🎹 MIDI Status</h3>
+      <div id="midiText">Not connected</div>
+    </div>
+    <div class="status-box" id="strudelStatus">
+      <h3>🎵 Strudel Status</h3>
+      <div id="strudelText">Not initialized</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="initBtn">🚀 Initialize Everything</button>
+    <button id="stopAllBtn" disabled>🛑 Stop All Patterns</button>
+    <button id="clearLEDsBtn" disabled>💡 Clear LEDs</button>
+  </div>
+
+  <div class="info-panel">
+    <h3>📊 Currently Playing (<span id="playingCount">0</span>)</h3>
+    <div class="playing-list" id="playingList">
+      <span style="color: #666;">No patterns playing</span>
+    </div>
+  </div>
+
+  <h2>🎮 Pattern Grid (Click or press on hardware)</h2>
+  <p style="color: #888; margin-bottom: 15px;">
+    <strong>Green</strong> = Playing | <strong>Gray</strong> = Stopped
+  </p>
+  <div class="pattern-grid" id="patternGrid"></div>
+
+  <h2>📝 Event Log</h2>
+  <div class="log" id="log"></div>
+
+  <script type="module">
+    // Import constants from constants.ts (inline for standalone test)
+    const LED_COLORS = {
+      OFF: 0,
+      RED: 5,
+      GREEN: 13,
+      YELLOW: 96,
+    };
+
+    const ALL_BUTTON_NOTES = [
+      32, 33, 34, 35, 36, 37, 38, 39,  // Row 0
+      24, 25, 26, 27, 28, 29, 30, 31,  // Row 1
+      16, 17, 18, 19, 20, 21, 22, 23,  // Row 2
+      8, 9, 10, 11, 12, 13, 14, 15,    // Row 3
+      0, 1, 2, 3, 4, 5, 6, 7,          // Row 4
+    ];
+
+    const MIDI_DEVICE_NAMES = {
+      KEYBOARD: 'APC Key 25 mk2',
+      CONTROLLER_INPUT: 'MIDIIN2 (APC Key 25 mk2)',
+      CONTROLLER_OUTPUT: 'MIDIOUT2 (APC Key 25 mk2)',
+    };
+
+    // Subset of default patterns for testing
+    const PATTERNS = [
+      // Row 0 - Melodic
+      { id: 32, code: 'note("c4 e4 g4 c5").s("casio")', name: 'C Major', color: LED_COLORS.GREEN },
+      { id: 33, code: 'note("a3 c4 e4 a4").s("gtr")', name: 'A Minor', color: LED_COLORS.GREEN },
+      { id: 34, code: 'note("c4 d4 e4 g4 a4 g4 e4 d4").slow(2).s("sine")', name: 'C Scale', color: LED_COLORS.GREEN },
+      { id: 35, code: 'note("c4 e4 g4 b4 c5").fast(4).s("triangle")', name: 'Arpeggio', color: LED_COLORS.GREEN },
+      { id: 36, code: 'note("<c4 e4 g4>*4").s("sawtooth").lpf(800)', name: 'Filtered', color: LED_COLORS.GREEN },
+      { id: 37, code: 'note("c5 c5 g4 g4 a4 a4 g4").slow(2).s("arpy")', name: 'Twinkle', color: LED_COLORS.GREEN },
+      { id: 38, code: 'note("c4 eb4 g4").s("casio").fast(2)', name: 'C Minor', color: LED_COLORS.GREEN },
+      { id: 39, code: 'note("c4 d4 e4 f4 g4 a4 b4 c5").fast(8).s("sine")', name: 'Fast Run', color: LED_COLORS.GREEN },
+      // Row 1 - Drums
+      { id: 24, code: 's("bd").fast(2)', name: 'Kick x2', color: LED_COLORS.RED },
+      { id: 25, code: 's("bd sd")', name: 'Kick-Snare', color: LED_COLORS.RED },
+      { id: 26, code: 's("bd*2 sd")', name: 'Double Kick', color: LED_COLORS.RED },
+      { id: 27, code: 's("bd ~ sd ~")', name: '4 on Floor', color: LED_COLORS.RED },
+      { id: 28, code: 'note("c2 c2 eb2 g2").s("sawtooth").lpf(800)', name: 'Bass Line', color: LED_COLORS.YELLOW },
+      { id: 29, code: 'note("c2").s("sawtooth").fast(4)', name: 'Bass Pulse', color: LED_COLORS.YELLOW },
+      { id: 30, code: 'note("c2 ~ eb2 ~").s("triangle")', name: 'Sub Bass', color: LED_COLORS.YELLOW },
+      { id: 31, code: 'note("c2 g1 c2 g1").s("sawtooth").lpf(400)', name: 'Deep Bass', color: LED_COLORS.YELLOW },
+      // Row 2 - More drums
+      { id: 16, code: 's("hh*8")', name: 'Hi-Hat 8th', color: LED_COLORS.RED },
+      { id: 17, code: 's("hh*16").fast(0.5)', name: 'Hi-Hat 16th', color: LED_COLORS.RED },
+      { id: 18, code: 's("cp, rm*4")', name: 'Clap+Rim', color: LED_COLORS.RED },
+      { id: 19, code: 's("~ cp")', name: 'Clap on 2', color: LED_COLORS.RED },
+      { id: 20, code: 's("perc*4").fast(2)', name: 'Perc Loop', color: LED_COLORS.RED },
+      { id: 21, code: 's("oh ~ oh ~")', name: 'Open Hat', color: LED_COLORS.RED },
+      { id: 22, code: 's("rm*4")', name: 'Rim Shots', color: LED_COLORS.RED },
+      { id: 23, code: 's("tabla*8").fast(2)', name: 'Fast Tabla', color: LED_COLORS.RED },
+    ];
+
+    // State
+    let midiAccess = null;
+    let midiDevices = null;
+    let patternSlots = new Map();
+    let activeSlots = new Map(); // Changed: store slots, not Pattern objects
+    let combinedPattern = null; // Single stacked pattern
+    let initialized = false;
+
+    const logEl = document.getElementById('log');
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const line = document.createElement('div');
+      line.className = type;
+      line.textContent = `[${timestamp}] ${message}`;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function updateMIDIStatus(text, ready = false) {
+      document.getElementById('midiText').textContent = text;
+      document.getElementById('midiStatus').className = ready ? 'status-box ready' : 'status-box';
+    }
+
+    function updateStrudelStatus(text, ready = false) {
+      document.getElementById('strudelText').textContent = text;
+      document.getElementById('strudelStatus').className = ready ? 'status-box ready' : 'status-box';
+    }
+
+    function updatePlayingList() {
+      const playingList = document.getElementById('playingList');
+      const playingCount = document.getElementById('playingCount');
+      const playing = Array.from(activeSlots.keys());
+
+      playingCount.textContent = playing.length;
+
+      if (playing.length === 0) {
+        playingList.innerHTML = '<span style="color: #666;">No patterns playing</span>';
+      } else {
+        playingList.innerHTML = playing.map(id => {
+          const slot = patternSlots.get(id);
+          return `<div class="playing-badge">${id}: ${slot?.name || 'Unknown'}</div>`;
+        }).join('');
+      }
+    }
+
+    // Create pattern grid
+    function createPatternGrid() {
+      const grid = document.getElementById('patternGrid');
+
+      PATTERNS.forEach(pattern => {
+        const cell = document.createElement('div');
+        cell.className = 'pattern-cell';
+        cell.id = `pattern-${pattern.id}`;
+        cell.innerHTML = `
+          <div class="note">${pattern.id}</div>
+          <div class="name">${pattern.name}</div>
+        `;
+
+        cell.addEventListener('click', () => togglePattern(pattern.id));
+        grid.appendChild(cell);
+
+        patternSlots.set(pattern.id, pattern);
+      });
+    }
+
+    // Connect MIDI
+    async function connectMIDI() {
+      try {
+        log('Connecting to MIDI...', 'info');
+        midiAccess = await navigator.requestMIDIAccess();
+
+        let keyboardInput = null;
+        let controllerInput = null;
+        let controllerOutput = null;
+
+        for (const input of midiAccess.inputs.values()) {
+          if (input.name === MIDI_DEVICE_NAMES.KEYBOARD) {
+            keyboardInput = input;
+          } else if (input.name === MIDI_DEVICE_NAMES.CONTROLLER_INPUT) {
+            controllerInput = input;
+          }
+        }
+
+        for (const output of midiAccess.outputs.values()) {
+          if (output.name === MIDI_DEVICE_NAMES.CONTROLLER_OUTPUT) {
+            controllerOutput = output;
+          }
+        }
+
+        if (!keyboardInput || !controllerInput || !controllerOutput) {
+          throw new Error('APCKEY25 mk2 not found');
+        }
+
+        midiDevices = { keyboardInput, controllerInput, controllerOutput };
+
+        // Setup listeners
+        controllerInput.onmidimessage = handleMIDIMessage;
+
+        log('✅ MIDI connected', 'success');
+        updateMIDIStatus('✅ Connected (3 devices)', true);
+        return true;
+      } catch (error) {
+        log(`❌ MIDI error: ${error.message}`, 'error');
+        updateMIDIStatus(`❌ ${error.message}`);
+        return false;
+      }
+    }
+
+    // Initialize Strudel
+    async function initializeStrudel() {
+      try {
+        log('Initializing Strudel...', 'info');
+        updateStrudelStatus('Initializing...');
+
+        await window.initStrudel({
+          prebake: () => window.samples('github:tidalcycles/dirt-samples'),
+        });
+
+        log('✅ Strudel initialized with samples', 'success');
+        updateStrudelStatus('✅ Ready (samples loaded)', true);
+        return true;
+      } catch (error) {
+        log(`❌ Strudel error: ${error.message}`, 'error');
+        updateStrudelStatus(`❌ ${error.message}`);
+        return false;
+      }
+    }
+
+    // Initialize everything
+    document.getElementById('initBtn').addEventListener('click', async () => {
+      log('🚀 Starting initialization...', 'info');
+      document.getElementById('initBtn').disabled = true;
+
+      const midiOk = await connectMIDI();
+      const strudelOk = await initializeStrudel();
+
+      if (midiOk && strudelOk) {
+        initialized = true;
+        log('🎉 System ready! Press buttons to play patterns!', 'success');
+        document.getElementById('stopAllBtn').disabled = false;
+        document.getElementById('clearLEDsBtn').disabled = false;
+      } else {
+        log('❌ Initialization failed', 'error');
+        document.getElementById('initBtn').disabled = false;
+      }
+    });
+
+    // Handle MIDI message
+    function handleMIDIMessage(event) {
+      const [status, note, velocity] = event.data;
+      const command = status & 0xf0;
+
+      if (command === 0x90 || command === 0x80) {
+        if (velocity > 0 && ALL_BUTTON_NOTES.includes(note)) {
+          togglePattern(note);
+        }
+      }
+    }
+
+    // Rebuild combined pattern from all active slots
+    // This is the key to proper pattern layering - all patterns must be
+    // combined with stack() and played as a single Pattern object
+    function rebuildCombinedPattern() {
+      // Stop existing combined pattern
+      if (combinedPattern) {
+        combinedPattern.hush();
+        combinedPattern = null;
+      }
+
+      // If no active patterns, we're done
+      if (activeSlots.size === 0) {
+        log('🔇 No active patterns', 'info');
+        return;
+      }
+
+      try {
+        // Collect all active pattern codes
+        const activeCodes = Array.from(activeSlots.values())
+          .map(slot => slot.code);
+
+        // Build combined pattern using stack()
+        let combinedCode;
+        if (activeCodes.length === 1) {
+          // Single pattern - no stack needed
+          combinedCode = activeCodes[0];
+        } else {
+          // Multiple patterns - use stack()
+          combinedCode = `stack(${activeCodes.join(', ')})`;
+        }
+
+        log(`🎵 Building combined pattern with ${activeCodes.length} layer(s)`, 'info');
+
+        // Evaluate and play combined pattern
+        combinedPattern = eval(combinedCode);
+        combinedPattern.play();
+
+        log(`✅ Combined pattern playing`, 'success');
+      } catch (error) {
+        log(`❌ Failed to rebuild combined pattern: ${error.message}`, 'error');
+        throw error;
+      }
+    }
+
+    // Toggle pattern
+    function togglePattern(id) {
+      if (!initialized) {
+        alert('Click "Initialize Everything" first!');
+        return;
+      }
+
+      const slot = patternSlots.get(id);
+      if (!slot) return;
+
+      if (activeSlots.has(id)) {
+        stopPattern(id);
+      } else {
+        startPattern(id);
+      }
+    }
+
+    // Start pattern
+    function startPattern(id) {
+      const slot = patternSlots.get(id);
+      if (!slot) return;
+
+      // If already playing, do nothing
+      if (activeSlots.has(id)) {
+        log(`Pattern ${id} already playing`, 'info');
+        return;
+      }
+
+      try {
+        log(`▶️ Starting: ${slot.name} (${id})`, 'info');
+
+        // Add to active slots
+        activeSlots.set(id, slot);
+
+        // Rebuild combined pattern with this slot included
+        rebuildCombinedPattern();
+
+        // Update UI
+        document.getElementById(`pattern-${id}`)?.classList.add('playing');
+
+        // Update LED
+        if (midiDevices) {
+          midiDevices.controllerOutput.send([0x90, id, slot.color]);
+        }
+
+        updatePlayingList();
+        log(`✅ Playing: ${slot.name}`, 'success');
+      } catch (error) {
+        log(`❌ Failed to start ${id}: ${error.message}`, 'error');
+        // Rollback on error
+        activeSlots.delete(id);
+      }
+    }
+
+    // Stop pattern
+    function stopPattern(id) {
+      const slot = patternSlots.get(id);
+
+      if (!activeSlots.has(id)) {
+        log(`Pattern ${id} not playing`, 'info');
+        return;
+      }
+
+      try {
+        log(`⏹️ Stopping: ${slot?.name || id}`, 'info');
+
+        // Remove from active slots
+        activeSlots.delete(id);
+
+        // Rebuild combined pattern without this slot
+        rebuildCombinedPattern();
+
+        // Update UI
+        document.getElementById(`pattern-${id}`)?.classList.remove('playing');
+
+        // Update LED
+        if (midiDevices) {
+          midiDevices.controllerOutput.send([0x90, id, LED_COLORS.OFF]);
+        }
+
+        updatePlayingList();
+        log(`✅ Stopped: ${slot?.name || id}`, 'success');
+      } catch (error) {
+        log(`❌ Failed to stop ${id}: ${error.message}`, 'error');
+      }
+    }
+
+    // Stop all
+    document.getElementById('stopAllBtn').addEventListener('click', () => {
+      log('🛑 Stopping all patterns...', 'warning');
+
+      // Use global hush() to stop all Strudel audio
+      if (typeof hush === 'function') {
+        hush();
+      }
+
+      // Clear pattern state
+      combinedPattern = null;
+      activeSlots.clear();
+
+      // Update UI
+      document.querySelectorAll('.pattern-cell').forEach(cell => {
+        cell.classList.remove('playing');
+      });
+
+      // Turn off all LEDs
+      if (midiDevices) {
+        ALL_BUTTON_NOTES.forEach(note => {
+          midiDevices.controllerOutput.send([0x90, note, LED_COLORS.OFF]);
+        });
+      }
+
+      updatePlayingList();
+      log('✅ All stopped', 'success');
+    });
+
+    // Clear LEDs
+    document.getElementById('clearLEDsBtn').addEventListener('click', () => {
+      if (midiDevices) {
+        ALL_BUTTON_NOTES.forEach(note => {
+          midiDevices.controllerOutput.send([0x90, note, LED_COLORS.OFF]);
+        });
+        log('💡 All LEDs cleared', 'info');
+      }
+    });
+
+    // Click overlay to dismiss
+    document.getElementById('audioOverlay').addEventListener('click', () => {
+      document.getElementById('audioOverlay').style.display = 'none';
+      log('👆 Click "Initialize Everything" to start', 'info');
+    });
+
+    // Initialize UI
+    createPatternGrid();
+    log('System loaded - click overlay to begin', 'info');
+  </script>
+</body>
+</html>

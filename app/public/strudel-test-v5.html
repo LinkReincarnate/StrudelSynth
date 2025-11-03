@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel FIXED v5</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      margin: 10px 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    button:hover { background: #5a5a5a; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .warning { color: #ff9800; }
+    .info { color: #2196f3; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .overlay h1 { font-size: 3rem; margin-bottom: 1rem; }
+    .overlay p { font-size: 1.5rem; }
+    pre {
+      background: #000;
+      padding: 15px;
+      border-radius: 4px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .status-box {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+      border-left: 4px solid #4caf50;
+    }
+    h2 {
+      border-bottom: 2px solid #4a4a4a;
+      padding-bottom: 10px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="audioOverlay">
+    <div style="text-align: center;">
+      <h1>🎵 Strudel FIXED v5</h1>
+      <p>Click anywhere to start audio</p>
+      <p style="font-size: 1rem; color: #888; margin-top: 1rem;">
+        Now loading samples properly!
+      </p>
+    </div>
+  </div>
+
+  <h1>🎵 Strudel Audio Test - FIXED v5</h1>
+
+  <div class="status-box">
+    <h3>Status: <span id="statusText">Waiting for click...</span></h3>
+    <div id="statusDetails" style="margin-top: 10px; font-size: 14px;"></div>
+  </div>
+
+  <h2>🎹 Test Patterns (with proper sample loading)</h2>
+  <div>
+    <button id="test1" disabled>1. Kick Drum (bd)</button>
+    <button id="test2" disabled>2. Hi-Hat (hh)</button>
+    <button id="test3" disabled>3. Piano Notes</button>
+    <button id="test4" disabled>4. Sawtooth Synth</button>
+    <br>
+    <button id="test5" disabled>5. Full Beat</button>
+    <button id="test6" disabled>6. Melody</button>
+    <button id="stopLast" disabled>⏹️ Stop Last</button>
+    <button id="stopAll" disabled>🛑 Stop All</button>
+  </div>
+
+  <h2>📊 Results:</h2>
+  <ul id="results"></ul>
+
+  <h2>🖥️ Console Log:</h2>
+  <pre id="console"></pre>
+
+  <script>
+    let strudelReady = false;
+    let lastPattern = null;
+    const results = document.getElementById('results');
+    const statusText = document.getElementById('statusText');
+    const statusDetails = document.getElementById('statusDetails');
+    const consoleLog = document.getElementById('console');
+
+    // Enable buttons
+    function enableButtons() {
+      document.querySelectorAll('button').forEach(btn => {
+        if (btn.id !== 'audioOverlay') btn.disabled = false;
+      });
+    }
+
+    function log(message, type = 'info') {
+      const li = document.createElement('li');
+      li.className = type;
+      li.textContent = message;
+      results.appendChild(li);
+
+      const timestamp = new Date().toLocaleTimeString();
+      consoleLog.textContent += `[${timestamp}] ${message}\n`;
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function updateStatus(text, details = '') {
+      statusText.textContent = text;
+      statusDetails.innerHTML = details;
+    }
+
+    // Initialize with proper sample loading
+    document.getElementById('audioOverlay').addEventListener('click', async function() {
+      try {
+        log('🔧 Initializing Strudel WITH sample loading...', 'info');
+        updateStatus('Initializing...', 'Loading samples from GitHub...');
+
+        // KEY FIX: Load samples during initialization
+        await initStrudel({
+          prebake: () => samples('github:tidalcycles/dirt-samples'),
+        });
+
+        strudelReady = true;
+        log('✅ Strudel initialized with samples!', 'success');
+        log('✅ Samples loaded from: github:tidalcycles/dirt-samples', 'success');
+        log(`✅ Global functions available: hush, note, s, sound`, 'success');
+
+        updateStatus('✅ Ready!', `
+          <strong>Samples:</strong> Loaded from dirt-samples<br>
+          <strong>Controls:</strong> Click buttons to test<br>
+          <strong>Stop:</strong> Use "Stop Last" or "Stop All"
+        `);
+
+        // Enable buttons
+        enableButtons();
+
+        // Hide overlay
+        document.getElementById('audioOverlay').style.display = 'none';
+
+      } catch (error) {
+        log(`❌ Initialization failed: ${error.message}`, 'error');
+        log(`❌ Stack: ${error.stack}`, 'error');
+        updateStatus('Error', error.message);
+      }
+    });
+
+    // Test 1: Kick drum
+    document.getElementById('test1').addEventListener('click', () => {
+      try {
+        log('🥁 Playing: s("bd")...', 'info');
+        lastPattern = s('bd').play();
+        log('✅ You should hear: BOOM BOOM BOOM', 'success');
+        updateStatus('Playing kick drum');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Test 2: Hi-hat
+    document.getElementById('test2').addEventListener('click', () => {
+      try {
+        log('🥁 Playing: s("hh*8")...', 'info');
+        lastPattern = s('hh*8').play();
+        log('✅ You should hear: tss-tss-tss-tss (8x)', 'success');
+        updateStatus('Playing hi-hat');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Test 3: Piano
+    document.getElementById('test3').addEventListener('click', () => {
+      try {
+        log('🎹 Playing: note("c4 e4 g4").s("piano")...', 'info');
+        lastPattern = note('c4 e4 g4').s('piano').play();
+        log('✅ You should hear: C-E-G chord (piano)', 'success');
+        updateStatus('Playing piano chord');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Test 4: Sawtooth synth
+    document.getElementById('test4').addEventListener('click', () => {
+      try {
+        log('🎛️ Playing: note("c3").s("sawtooth")...', 'info');
+        lastPattern = note('c3').s('sawtooth').play();
+        log('✅ You should hear: Low sawtooth bass', 'success');
+        updateStatus('Playing sawtooth bass');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Test 5: Full beat
+    document.getElementById('test5').addEventListener('click', () => {
+      try {
+        log('🥁 Playing: s("bd sd, hh*8")...', 'info');
+        lastPattern = s('bd sd, hh*8').play();
+        log('✅ You should hear: Full drum beat!', 'success');
+        updateStatus('Playing full beat');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Test 6: Melody
+    document.getElementById('test6').addEventListener('click', () => {
+      try {
+        log('🎵 Playing: note("c4 d4 e4 g4").s("piano")...', 'info');
+        lastPattern = note('c4 d4 e4 g4').s('piano').play();
+        log('✅ You should hear: C-D-E-G melody', 'success');
+        updateStatus('Playing melody');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Stop last pattern
+    document.getElementById('stopLast').addEventListener('click', () => {
+      try {
+        if (!lastPattern) {
+          log('⚠️ No pattern to stop', 'warning');
+          return;
+        }
+        log('⏹️ Stopping last pattern with .hush()...', 'info');
+        lastPattern.hush();
+        log('✅ Pattern stopped', 'success');
+        updateStatus('Pattern stopped');
+        lastPattern = null;
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Stop all
+    document.getElementById('stopAll').addEventListener('click', () => {
+      try {
+        log('🛑 Calling global hush()...', 'info');
+        hush();
+        log('✅ All patterns stopped', 'success');
+        updateStatus('All stopped');
+        lastPattern = null;
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // Page load
+    window.addEventListener('load', () => {
+      if (typeof initStrudel !== 'undefined') {
+        log('✅ Strudel CDN loaded (@strudel/web@1.2.6)', 'success');
+        log('ℹ️ Click overlay to initialize with samples', 'info');
+      } else {
+        log('❌ Strudel CDN failed to load!', 'error');
+      }
+    });
+
+    window.addEventListener('error', (e) => {
+      log(`❌ Error: ${e.message}`, 'error');
+    });
+  </script>
+</body>
+</html>

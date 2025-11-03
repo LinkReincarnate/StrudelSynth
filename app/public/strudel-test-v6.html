@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel Synths Test v6</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 16px;
+      margin: 8px 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    button:hover { background: #5a5a5a; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .warning { color: #ff9800; }
+    .info { color: #2196f3; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .overlay h1 { font-size: 3rem; }
+    pre {
+      background: #000;
+      padding: 15px;
+      border-radius: 4px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+    .status-box {
+      background: #2a2a2a;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .section {
+      border: 2px solid #4a4a4a;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+    h2 {
+      border-bottom: 2px solid #4a4a4a;
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="audioOverlay">
+    <div style="text-align: center;">
+      <h1>🎛️ Synth Discovery v6</h1>
+      <p style="font-size: 1.5rem;">Click to start</p>
+    </div>
+  </div>
+
+  <h1>🎛️ Strudel Synthesizer Test</h1>
+
+  <div class="status-box">
+    <h3>Status: <span id="statusText">Click to start...</span></h3>
+  </div>
+
+  <div class="section">
+    <h2>🎹 Built-in Synthesizers (should work without samples)</h2>
+    <p style="color: #888;">These use Web Audio oscillators, not samples</p>
+    <button id="synth1" disabled>Sine Wave</button>
+    <button id="synth2" disabled>Sawtooth</button>
+    <button id="synth3" disabled>Square</button>
+    <button id="synth4" disabled>Triangle</button>
+  </div>
+
+  <div class="section">
+    <h2>🥁 Drums (from dirt-samples - WORKING)</h2>
+    <button id="drum1" disabled>Kick (bd)</button>
+    <button id="drum2" disabled>Snare (sd)</button>
+    <button id="drum3" disabled>Hi-hat (hh)</button>
+    <button id="drum4" disabled>Clap (cp)</button>
+  </div>
+
+  <div class="section">
+    <h2>🎸 Melodic Samples (testing what exists in dirt-samples)</h2>
+    <p style="color: #888;">Trying common sample names</p>
+    <button id="mel1" disabled>superpiano</button>
+    <button id="mel2" disabled>gtr (guitar)</button>
+    <button id="mel3" disabled>bass</button>
+    <button id="mel4" disabled>flbass</button>
+    <button id="mel5" disabled>casio</button>
+    <button id="mel6" disabled>arpy</button>
+  </div>
+
+  <div class="section">
+    <h2>🎛️ Controls</h2>
+    <button id="stopLast" disabled>⏹️ Stop Last Pattern</button>
+    <button id="stopAll" disabled>🛑 Stop All (hush)</button>
+  </div>
+
+  <h2>📊 Results:</h2>
+  <ul id="results"></ul>
+
+  <h2>🖥️ Console:</h2>
+  <pre id="console"></pre>
+
+  <script>
+    let strudelReady = false;
+    let lastPattern = null;
+
+    const results = document.getElementById('results');
+    const statusText = document.getElementById('statusText');
+    const consoleLog = document.getElementById('console');
+
+    function enableButtons() {
+      document.querySelectorAll('button').forEach(btn => {
+        if (btn.id !== 'audioOverlay') btn.disabled = false;
+      });
+    }
+
+    function log(message, type = 'info') {
+      const li = document.createElement('li');
+      li.className = type;
+      li.textContent = message;
+      results.appendChild(li);
+
+      const timestamp = new Date().toLocaleTimeString();
+      consoleLog.textContent += `[${timestamp}] ${message}\n`;
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function updateStatus(text) {
+      statusText.textContent = text;
+    }
+
+    // Initialize
+    document.getElementById('audioOverlay').addEventListener('click', async function() {
+      try {
+        log('🔧 Initializing Strudel...', 'info');
+        updateStatus('Loading samples...');
+
+        await initStrudel({
+          prebake: () => samples('github:tidalcycles/dirt-samples'),
+        });
+
+        strudelReady = true;
+        log('✅ Strudel ready!', 'success');
+        updateStatus('Ready - Test synths and samples');
+        enableButtons();
+        document.getElementById('audioOverlay').style.display = 'none';
+
+      } catch (error) {
+        log(`❌ Init failed: ${error.message}`, 'error');
+      }
+    });
+
+    // SYNTHS (built-in Web Audio oscillators)
+    document.getElementById('synth1').addEventListener('click', () => {
+      try {
+        log('🎹 Testing: note("c4 e4 g4").s("sine")...', 'info');
+        lastPattern = note('c4 e4 g4').s('sine').play();
+        log('✅ Sine wave - should hear smooth tones', 'success');
+        updateStatus('Playing: Sine wave');
+      } catch (e) {
+        log(`❌ Sine failed: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('synth2').addEventListener('click', () => {
+      try {
+        log('🎹 Testing: note("c3 g3").s("sawtooth")...', 'info');
+        lastPattern = note('c3 g3').s('sawtooth').play();
+        log('✅ Sawtooth - should hear buzzy tones', 'success');
+        updateStatus('Playing: Sawtooth');
+      } catch (e) {
+        log(`❌ Sawtooth failed: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('synth3').addEventListener('click', () => {
+      try {
+        log('🎹 Testing: note("c4").s("square")...', 'info');
+        lastPattern = note('c4').s('square').play();
+        log('✅ Square wave - should hear hollow tones', 'success');
+        updateStatus('Playing: Square wave');
+      } catch (e) {
+        log(`❌ Square failed: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('synth4').addEventListener('click', () => {
+      try {
+        log('🎹 Testing: note("c4 d4 e4").s("triangle")...', 'info');
+        lastPattern = note('c4 d4 e4').s('triangle').play();
+        log('✅ Triangle wave - should hear soft tones', 'success');
+        updateStatus('Playing: Triangle');
+      } catch (e) {
+        log(`❌ Triangle failed: ${e.message}`, 'error');
+      }
+    });
+
+    // DRUMS (confirmed working)
+    document.getElementById('drum1').addEventListener('click', () => {
+      try {
+        log('🥁 Testing: s("bd")...', 'info');
+        lastPattern = s('bd').play();
+        log('✅ Kick drum', 'success');
+        updateStatus('Playing: Kick');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('drum2').addEventListener('click', () => {
+      try {
+        log('🥁 Testing: s("sd")...', 'info');
+        lastPattern = s('sd').play();
+        log('✅ Snare drum', 'success');
+        updateStatus('Playing: Snare');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('drum3').addEventListener('click', () => {
+      try {
+        log('🥁 Testing: s("hh")...', 'info');
+        lastPattern = s('hh').play();
+        log('✅ Hi-hat', 'success');
+        updateStatus('Playing: Hi-hat');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('drum4').addEventListener('click', () => {
+      try {
+        log('🥁 Testing: s("cp")...', 'info');
+        lastPattern = s('cp').play();
+        log('✅ Clap', 'success');
+        updateStatus('Playing: Clap');
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    // MELODIC SAMPLES
+    document.getElementById('mel1').addEventListener('click', () => {
+      try {
+        log('🎸 Testing: n("0 2 4").s("superpiano")...', 'info');
+        lastPattern = n('0 2 4').s('superpiano').play();
+        log('✅ If you hear notes, superpiano exists!', 'success');
+        updateStatus('Testing: superpiano');
+      } catch (e) {
+        log(`❌ superpiano: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('mel2').addEventListener('click', () => {
+      try {
+        log('🎸 Testing: n("0 2 4").s("gtr")...', 'info');
+        lastPattern = n('0 2 4').s('gtr').play();
+        log('✅ If you hear notes, gtr exists!', 'success');
+        updateStatus('Testing: gtr');
+      } catch (e) {
+        log(`❌ gtr: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('mel3').addEventListener('click', () => {
+      try {
+        log('🎸 Testing: n("0 2 4").s("bass")...', 'info');
+        lastPattern = n('0 2 4').s('bass').play();
+        log('✅ If you hear bass, bass exists!', 'success');
+        updateStatus('Testing: bass');
+      } catch (e) {
+        log(`❌ bass: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('mel4').addEventListener('click', () => {
+      try {
+        log('🎸 Testing: n("0 2 4").s("flbass")...', 'info');
+        lastPattern = n('0 2 4').s('flbass').play();
+        log('✅ If you hear bass, flbass exists!', 'success');
+        updateStatus('Testing: flbass');
+      } catch (e) {
+        log(`❌ flbass: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('mel5').addEventListener('click', () => {
+      try {
+        log('🎸 Testing: n("0 2 4").s("casio")...', 'info');
+        lastPattern = n('0 2 4').s('casio').play();
+        log('✅ If you hear tones, casio exists!', 'success');
+        updateStatus('Testing: casio');
+      } catch (e) {
+        log(`❌ casio: ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('mel6').addEventListener('click', () => {
+      try {
+        log('🎸 Testing: n("0 2 4").s("arpy")...', 'info');
+        lastPattern = n('0 2 4').s('arpy').play();
+        log('✅ If you hear arp, arpy exists!', 'success');
+        updateStatus('Testing: arpy');
+      } catch (e) {
+        log(`❌ arpy: ${e.message}`, 'error');
+      }
+    });
+
+    // Controls
+    document.getElementById('stopLast').addEventListener('click', () => {
+      try {
+        if (!lastPattern) {
+          log('⚠️ No pattern to stop', 'warning');
+          return;
+        }
+        lastPattern.hush();
+        log('✅ Stopped last pattern', 'success');
+        updateStatus('Stopped');
+        lastPattern = null;
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    document.getElementById('stopAll').addEventListener('click', () => {
+      try {
+        hush();
+        log('✅ All stopped', 'success');
+        updateStatus('All stopped');
+        lastPattern = null;
+      } catch (e) {
+        log(`❌ ${e.message}`, 'error');
+      }
+    });
+
+    window.addEventListener('load', () => {
+      if (typeof initStrudel !== 'undefined') {
+        log('✅ Strudel CDN loaded', 'success');
+      } else {
+        log('❌ CDN failed', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

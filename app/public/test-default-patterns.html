@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrudelSynth - Default Patterns Test</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #0a0a0a;
+      color: #fff;
+    }
+    h1 {
+      text-align: center;
+      color: #4caf50;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    .status-box {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      border-left: 4px solid #4caf50;
+    }
+    .status-box h3 {
+      margin-top: 0;
+    }
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .pattern-card {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 8px;
+      border: 2px solid #333;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .pattern-card:hover {
+      border-color: #4caf50;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    }
+    .pattern-card.playing {
+      border-color: #4caf50;
+      background: #1a3a1a;
+    }
+    .pattern-card .id {
+      color: #888;
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+    .pattern-card .name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 8px;
+      color: #4caf50;
+    }
+    .pattern-card .category {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      margin-bottom: 8px;
+    }
+    .category.melody { background: #2a4a2a; color: #4caf50; }
+    .category.drums { background: #4a2a2a; color: #f44336; }
+    .category.bass { background: #4a4a2a; color: #ffeb3b; }
+    .category.texture { background: #2a2a4a; color: #2196f3; }
+    .pattern-card .code {
+      font-family: 'Courier New', monospace;
+      font-size: 11px;
+      color: #aaa;
+      background: #0a0a0a;
+      padding: 8px;
+      border-radius: 4px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .controls {
+      text-align: center;
+      margin: 30px 0;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+    button:hover { background: #5a5a5a; transform: translateY(-1px); }
+    button.stop { background: #f44336; }
+    button.stop:hover { background: #d32f2f; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.97);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .overlay h1 { font-size: 4rem; margin-bottom: 1rem; }
+    .overlay p { font-size: 1.8rem; }
+    h2 {
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+      margin-top: 40px;
+      color: #4caf50;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    .section-header h2 {
+      margin: 0;
+      border: none;
+      padding: 0;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .info { color: #2196f3; }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="audioOverlay">
+    <div style="text-align: center;">
+      <h1>🎵 StrudelSynth</h1>
+      <p>Click anywhere to start audio</p>
+      <p style="font-size: 1rem; color: #666; margin-top: 1rem;">
+        Testing default pattern library
+      </p>
+    </div>
+  </div>
+
+  <h1>🎵 StrudelSynth - Default Pattern Library</h1>
+  <p class="subtitle">Testing patterns from constants.ts</p>
+
+  <div class="status-box">
+    <h3>Status: <span id="statusText">Click overlay to start...</span></h3>
+    <div id="statusDetails" style="margin-top: 10px; font-size: 14px; color: #888;"></div>
+  </div>
+
+  <div class="controls">
+    <button class="stop" id="stopAll">🛑 Stop All Patterns</button>
+  </div>
+
+  <div class="section-header">
+    <h2>🎹 Melodic Patterns (Row 0 - Notes 32-39)</h2>
+    <span style="color: #888; font-size: 14px;">Click to play/stop</span>
+  </div>
+  <div class="pattern-grid" id="melodyGrid"></div>
+
+  <div class="section-header">
+    <h2>🥁 Drum Patterns (Row 1 - Notes 24-31)</h2>
+  </div>
+  <div class="pattern-grid" id="drumsGrid"></div>
+
+  <div class="section-header">
+    <h2>🎸 Bass Patterns (Sample)</h2>
+  </div>
+  <div class="pattern-grid" id="bassGrid"></div>
+
+  <script>
+    let strudelReady = false;
+    let activePatterns = new Map();
+
+    const statusText = document.getElementById('statusText');
+    const statusDetails = document.getElementById('statusDetails');
+
+    // Default patterns from constants.ts
+    const patterns = [
+      // Row 0 - Melodic (32-39)
+      { id: 32, code: 'note("c4 e4 g4 c5").s("casio")', name: 'C Major Chord', category: 'melody' },
+      { id: 33, code: 'note("a3 c4 e4 a4").s("gtr")', name: 'A Minor Chord', category: 'melody' },
+      { id: 34, code: 'note("c4 d4 e4 g4 a4 g4 e4 d4").slow(2).s("sine")', name: 'C Major Scale', category: 'melody' },
+      { id: 35, code: 'note("c4 e4 g4 b4 c5").fast(4).s("triangle")', name: 'Arpeggio Up', category: 'melody' },
+      { id: 36, code: 'note("<c4 e4 g4>*4").s("sawtooth").lpf(800)', name: 'Filtered Chord', category: 'melody' },
+      { id: 37, code: 'note("c5 c5 g4 g4 a4 a4 g4").slow(2).s("arpy")', name: 'Twinkle Melody', category: 'melody' },
+      { id: 38, code: 'note("c4 eb4 g4").s("casio").fast(2)', name: 'C Minor Fast', category: 'melody' },
+      { id: 39, code: 'note("c4 d4 e4 f4 g4 a4 b4 c5").fast(8).s("sine")', name: 'Fast Scale Run', category: 'melody' },
+
+      // Row 1 - Drums (24-31)
+      { id: 24, code: 's("bd").fast(2)', name: 'Kick Drum x2', category: 'drums' },
+      { id: 25, code: 's("bd sd")', name: 'Kick-Snare', category: 'drums' },
+      { id: 26, code: 's("bd*2 sd")', name: 'Double Kick', category: 'drums' },
+      { id: 27, code: 's("bd ~ sd ~")', name: 'Four on Floor', category: 'drums' },
+      { id: 28, code: 'note("c2 c2 eb2 g2").s("sawtooth").lpf(800)', name: 'Bass Line', category: 'bass' },
+      { id: 29, code: 'note("c2").s("sawtooth").fast(4)', name: 'Bass Pulse', category: 'bass' },
+      { id: 30, code: 'note("c2 ~ eb2 ~").s("triangle")', name: 'Sub Bass', category: 'bass' },
+      { id: 31, code: 'note("c2 g1 c2 g1").s("sawtooth").lpf(400)', name: 'Deep Bass', category: 'bass' },
+
+      // Additional samples
+      { id: 16, code: 's("hh*8")', name: 'Hi-Hat 8th', category: 'drums' },
+      { id: 17, code: 's("hh*16").fast(0.5)', name: 'Hi-Hat 16th', category: 'drums' },
+      { id: 18, code: 's("cp, rm*4")', name: 'Clap + Rim', category: 'drums' },
+      { id: 19, code: 's("~ cp")', name: 'Clap on 2', category: 'drums' },
+    ];
+
+    function renderPatterns() {
+      const melodyGrid = document.getElementById('melodyGrid');
+      const drumsGrid = document.getElementById('drumsGrid');
+      const bassGrid = document.getElementById('bassGrid');
+
+      patterns.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'pattern-card';
+        card.innerHTML = `
+          <div class="id">Slot ${p.id}</div>
+          <div class="name">${p.name}</div>
+          <div class="category ${p.category}">${p.category}</div>
+          <div class="code">${p.code}</div>
+        `;
+
+        card.addEventListener('click', () => togglePattern(p.id, p.code, card));
+
+        // Add to appropriate grid
+        if (p.id >= 32 && p.id <= 39) {
+          melodyGrid.appendChild(card);
+        } else if ((p.id >= 24 && p.id <= 27) || (p.id >= 16 && p.id <= 19)) {
+          drumsGrid.appendChild(card);
+        } else if (p.id >= 28 && p.id <= 31) {
+          bassGrid.appendChild(card);
+        }
+      });
+    }
+
+    function togglePattern(id, code, cardElement) {
+      if (!strudelReady) {
+        alert('Strudel not ready - click overlay first!');
+        return;
+      }
+
+      if (activePatterns.has(id)) {
+        // Stop pattern
+        const pattern = activePatterns.get(id);
+        pattern.hush();
+        activePatterns.delete(id);
+        cardElement.classList.remove('playing');
+        updateStatus();
+      } else {
+        // Start pattern
+        try {
+          const pattern = eval(code).play();
+          activePatterns.set(id, pattern);
+          cardElement.classList.add('playing');
+          updateStatus();
+        } catch (error) {
+          console.error('Pattern error:', error);
+          alert('Pattern error: ' + error.message);
+        }
+      }
+    }
+
+    function updateStatus() {
+      const count = activePatterns.size;
+      if (count === 0) {
+        statusText.textContent = '✅ Ready - Click patterns to play';
+        statusDetails.innerHTML = 'No patterns playing';
+      } else {
+        statusText.textContent = `🎵 Playing ${count} pattern${count > 1 ? 's' : ''}`;
+        const ids = Array.from(activePatterns.keys()).join(', ');
+        statusDetails.innerHTML = `Active slots: ${ids}`;
+      }
+    }
+
+    // Initialize
+    document.getElementById('audioOverlay').addEventListener('click', async function() {
+      try {
+        statusText.textContent = 'Initializing...';
+        statusDetails.innerHTML = 'Loading samples from dirt-samples...';
+
+        await initStrudel({
+          prebake: () => samples('github:tidalcycles/dirt-samples'),
+        });
+
+        strudelReady = true;
+        statusText.textContent = '✅ Ready - Click patterns to play';
+        statusDetails.innerHTML = `
+          <span class="success">✓ Strudel initialized</span><br>
+          <span class="success">✓ Samples loaded (dirt-samples)</span><br>
+          <span class="info">Click any pattern card to play it</span>
+        `;
+
+        document.getElementById('audioOverlay').style.display = 'none';
+        renderPatterns();
+
+      } catch (error) {
+        statusText.textContent = 'Error!';
+        statusDetails.innerHTML = `<span class="error">${error.message}</span>`;
+        console.error('Init error:', error);
+      }
+    });
+
+    // Stop all
+    document.getElementById('stopAll').addEventListener('click', () => {
+      if (!strudelReady) return;
+
+      hush();
+      activePatterns.clear();
+
+      // Remove playing class from all cards
+      document.querySelectorAll('.pattern-card').forEach(card => {
+        card.classList.remove('playing');
+      });
+
+      updateStatus();
+    });
+
+    window.addEventListener('error', (e) => {
+      console.error('Page error:', e);
+    });
+  </script>
+</body>
+</html>

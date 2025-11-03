@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel API Test v3</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #5a5a5a;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .warning { color: #ff9800; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .overlay-content {
+      text-align: center;
+    }
+    .overlay h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .overlay p {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Audio init overlay -->
+  <div class="overlay" id="audioOverlay">
+    <div class="overlay-content">
+      <h1>🎵 Strudel API Test v3</h1>
+      <p>Click anywhere to enable audio</p>
+    </div>
+  </div>
+
+  <h1>🎵 Strudel API Discovery Test</h1>
+
+  <div class="status" id="status">
+    <p>Status: <span id="statusText">Waiting for audio init...</span></p>
+  </div>
+
+  <div>
+    <button id="testPlay">Test 1: What does .play() return?</button>
+    <button id="testGlobalHush">Test 2: Global hush()</button>
+    <button id="testPattern1">Test 3: Play Pattern 1 (kick)</button>
+    <button id="testPattern2">Test 4: Play Pattern 2 (hihat)</button>
+    <button id="testStopAll">Stop All (hush)</button>
+  </div>
+
+  <h2>API Findings:</h2>
+  <ul id="results"></ul>
+
+  <h2>Console Output:</h2>
+  <pre id="console" style="background: #000; padding: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto;"></pre>
+
+  <script>
+    let strudelReady = false;
+    const results = document.getElementById('results');
+    const statusText = document.getElementById('statusText');
+    const consoleLog = document.getElementById('console');
+
+    function log(message, type = 'success') {
+      const li = document.createElement('li');
+      li.className = type;
+      li.textContent = message;
+      results.appendChild(li);
+
+      const timestamp = new Date().toLocaleTimeString();
+      consoleLog.textContent += `[${timestamp}] ${message}\n`;
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function updateStatus(text) {
+      statusText.textContent = text;
+    }
+
+    // Initialize on overlay click
+    document.getElementById('audioOverlay').addEventListener('click', async function() {
+      try {
+        log('🔧 Initializing Strudel...');
+        updateStatus('Initializing...');
+
+        await initStrudel();
+        strudelReady = true;
+
+        log('✅ Strudel initialized!');
+        updateStatus('Ready - Click test buttons');
+
+        // Hide overlay
+        document.getElementById('audioOverlay').style.display = 'none';
+
+        // Check global functions
+        log(`ℹ️ Global 'hush' exists: ${typeof hush !== 'undefined'}`);
+        log(`ℹ️ Global 'note' exists: ${typeof note !== 'undefined'}`);
+        log(`ℹ️ Global 's' exists: ${typeof s !== 'undefined'}`);
+        log(`ℹ️ Global 'sound' exists: ${typeof sound !== 'undefined'}`);
+
+      } catch (error) {
+        log('❌ Init failed: ' + error.message, 'error');
+        updateStatus('Error: ' + error.message);
+      }
+    });
+
+    // Test 1: What does .play() return?
+    document.getElementById('testPlay').addEventListener('click', () => {
+      try {
+        if (!strudelReady) throw new Error('Strudel not ready');
+
+        log('🔬 TEST 1: Inspecting .play() return value...');
+
+        const pattern = sound('sine');
+        const returnValue = pattern.play();
+
+        log(`✅ Pattern created: sound('sine')`);
+        log(`🔍 .play() returned: ${returnValue}`);
+        log(`🔍 Type: ${typeof returnValue}`);
+        log(`🔍 Constructor: ${returnValue?.constructor?.name || 'N/A'}`);
+
+        if (returnValue && typeof returnValue === 'object') {
+          const props = Object.keys(returnValue);
+          log(`🔍 Properties (${props.length}): ${props.slice(0, 10).join(', ')}...`);
+
+          // Check for common methods
+          log(`🔍 Has .stop()? ${typeof returnValue.stop === 'function'}`);
+          log(`🔍 Has .pause()? ${typeof returnValue.pause === 'function'}`);
+          log(`🔍 Has .hush()? ${typeof returnValue.hush === 'function'}`);
+        }
+
+        updateStatus('Pattern playing - check console for .play() details');
+
+      } catch (error) {
+        log('❌ Test 1 failed: ' + error.message, 'error');
+      }
+    });
+
+    // Test 2: Global hush()
+    document.getElementById('testGlobalHush').addEventListener('click', () => {
+      try {
+        if (!strudelReady) throw new Error('Strudel not ready');
+
+        log('🔬 TEST 2: Testing global hush() function...');
+
+        if (typeof hush === 'undefined') {
+          log('❌ hush() is not defined globally!', 'error');
+          return;
+        }
+
+        hush();
+        log('✅ hush() called successfully');
+        log('ℹ️ All patterns should now be stopped');
+        updateStatus('All stopped via hush()');
+
+      } catch (error) {
+        log('❌ Test 2 failed: ' + error.message, 'error');
+      }
+    });
+
+    // Test 3: Play pattern 1
+    document.getElementById('testPattern1').addEventListener('click', () => {
+      try {
+        if (!strudelReady) throw new Error('Strudel not ready');
+
+        log('🔬 TEST 3: Playing kick drum pattern...');
+        s('bd').play();
+        log('✅ s("bd").play() called');
+        log('ℹ️ You should hear: boom boom boom boom');
+        updateStatus('Playing: kick drum');
+
+      } catch (error) {
+        log('❌ Test 3 failed: ' + error.message, 'error');
+      }
+    });
+
+    // Test 4: Play pattern 2
+    document.getElementById('testPattern2').addEventListener('click', () => {
+      try {
+        if (!strudelReady) throw new Error('Strudel not ready');
+
+        log('🔬 TEST 4: Playing hi-hat pattern...');
+        s('hh*8').play();
+        log('✅ s("hh*8").play() called');
+        log('ℹ️ You should hear: tss-tss-tss-tss (8x per cycle)');
+        updateStatus('Playing: hi-hat');
+
+      } catch (error) {
+        log('❌ Test 4 failed: ' + error.message, 'error');
+      }
+    });
+
+    // Stop all
+    document.getElementById('testStopAll').addEventListener('click', () => {
+      try {
+        if (!strudelReady) throw new Error('Strudel not ready');
+
+        log('🛑 Calling hush() to stop all...');
+        hush();
+        log('✅ All patterns stopped');
+        updateStatus('Stopped');
+
+      } catch (error) {
+        log('❌ Stop failed: ' + error.message, 'error');
+      }
+    });
+
+    // Log page load
+    window.addEventListener('load', () => {
+      if (typeof initStrudel !== 'undefined') {
+        log('✅ Strudel CDN loaded');
+        log('ℹ️ Click overlay to start');
+      } else {
+        log('❌ Strudel CDN failed to load!', 'error');
+      }
+    });
+
+    // Catch errors
+    window.addEventListener('error', (e) => {
+      log('❌ ' + e.message, 'error');
+    });
+  </script>
+</body>
+</html>

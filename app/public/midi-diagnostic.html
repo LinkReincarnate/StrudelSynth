@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIDI Device Diagnostic</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #0a0a0a;
+      color: #0f0;
+    }
+    h1 { color: #0f0; text-align: center; }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background: #0f0;
+      color: #000;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      display: block;
+      margin: 20px auto;
+    }
+    button:hover { background: #0c0; }
+    .section {
+      background: #111;
+      padding: 20px;
+      margin: 20px 0;
+      border: 2px solid #0f0;
+      border-radius: 4px;
+    }
+    .device {
+      background: #1a1a1a;
+      padding: 15px;
+      margin: 10px 0;
+      border-left: 4px solid #0f0;
+    }
+    .device-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #0ff;
+      margin-bottom: 10px;
+    }
+    .device-info {
+      color: #888;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .error {
+      color: #f00;
+      background: #300;
+      padding: 15px;
+      border: 2px solid #f00;
+      border-radius: 4px;
+    }
+    .success {
+      color: #0f0;
+    }
+    .warning {
+      color: #ff0;
+    }
+    pre {
+      background: #000;
+      padding: 15px;
+      overflow-x: auto;
+      border: 1px solid #0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 MIDI Device Diagnostic</h1>
+  <p style="text-align: center; color: #888;">This will show ALL MIDI devices on your system</p>
+
+  <button id="scanBtn">🔍 Scan for MIDI Devices</button>
+
+  <div id="results"></div>
+
+  <script>
+    const resultsEl = document.getElementById('results');
+
+    async function scan() {
+      resultsEl.innerHTML = '<div class="section"><p>Scanning for MIDI devices...</p></div>';
+
+      try {
+        // Check if Web MIDI is supported
+        if (!navigator.requestMIDIAccess) {
+          resultsEl.innerHTML = `
+            <div class="error">
+              <h2>❌ Web MIDI Not Supported</h2>
+              <p>Your browser doesn't support the Web MIDI API.</p>
+              <p>Please use Chrome, Edge, or Opera.</p>
+              <p><strong>Current browser:</strong> ${navigator.userAgent}</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Request MIDI access
+        const midiAccess = await navigator.requestMIDIAccess();
+
+        // Count devices
+        const inputCount = midiAccess.inputs.size;
+        const outputCount = midiAccess.outputs.size;
+
+        let html = `
+          <div class="section">
+            <h2 class="success">✅ Web MIDI API Available</h2>
+            <p>Found <strong>${inputCount}</strong> MIDI input(s) and <strong>${outputCount}</strong> MIDI output(s)</p>
+          </div>
+        `;
+
+        // List all inputs
+        if (inputCount > 0) {
+          html += '<div class="section"><h2>📥 MIDI INPUTS</h2>';
+
+          for (const input of midiAccess.inputs.values()) {
+            html += `
+              <div class="device">
+                <div class="device-name">📥 ${input.name || 'Unnamed Device'}</div>
+                <div class="device-info">ID: ${input.id}</div>
+                <div class="device-info">Manufacturer: ${input.manufacturer || 'Unknown'}</div>
+                <div class="device-info">State: ${input.state}</div>
+                <div class="device-info">Connection: ${input.connection}</div>
+                <pre>Full Name: "${input.name}"</pre>
+              </div>
+            `;
+          }
+
+          html += '</div>';
+        } else {
+          html += '<div class="section"><h2 class="warning">⚠️ No MIDI Inputs Found</h2></div>';
+        }
+
+        // List all outputs
+        if (outputCount > 0) {
+          html += '<div class="section"><h2>📤 MIDI OUTPUTS</h2>';
+
+          for (const output of midiAccess.outputs.values()) {
+            html += `
+              <div class="device">
+                <div class="device-name">📤 ${output.name || 'Unnamed Device'}</div>
+                <div class="device-info">ID: ${output.id}</div>
+                <div class="device-info">Manufacturer: ${output.manufacturer || 'Unknown'}</div>
+                <div class="device-info">State: ${output.state}</div>
+                <div class="device-info">Connection: ${output.connection}</div>
+                <pre>Full Name: "${output.name}"</pre>
+              </div>
+            `;
+          }
+
+          html += '</div>';
+        } else {
+          html += '<div class="section"><h2 class="warning">⚠️ No MIDI Outputs Found</h2></div>';
+        }
+
+        // Check for APCKEY25 mk2
+        html += '<div class="section"><h2>🎹 Looking for APCKEY25 mk2...</h2>';
+
+        let foundKeyboard = false;
+        let foundMIDIIN2 = false;
+        let foundMIDIOUT2 = false;
+
+        for (const input of midiAccess.inputs.values()) {
+          if (input.name === 'APC Key 25 mk2') foundKeyboard = true;
+          if (input.name === 'MIDIIN2') foundMIDIIN2 = true;
+        }
+
+        for (const output of midiAccess.outputs.values()) {
+          if (output.name === 'MIDIOUT2') foundMIDIOUT2 = true;
+        }
+
+        if (foundKeyboard) {
+          html += '<p class="success">✅ Found "APC Key 25 mk2" (keyboard input)</p>';
+        } else {
+          html += '<p class="error">❌ NOT FOUND: "APC Key 25 mk2" (keyboard input)</p>';
+        }
+
+        if (foundMIDIIN2) {
+          html += '<p class="success">✅ Found "MIDIIN2" (controller input)</p>';
+        } else {
+          html += '<p class="error">❌ NOT FOUND: "MIDIIN2" (controller input)</p>';
+        }
+
+        if (foundMIDIOUT2) {
+          html += '<p class="success">✅ Found "MIDIOUT2" (controller output)</p>';
+        } else {
+          html += '<p class="error">❌ NOT FOUND: "MIDIOUT2" (controller output)</p>';
+        }
+
+        if (foundKeyboard && foundMIDIIN2 && foundMIDIOUT2) {
+          html += '<h3 class="success">🎉 All APCKEY25 mk2 devices found!</h3>';
+        } else {
+          html += `
+            <h3 class="warning">⚠️ APCKEY25 mk2 Not Fully Detected</h3>
+            <p>Possible issues:</p>
+            <ul>
+              <li>Device not connected via USB</li>
+              <li>Device not powered on</li>
+              <li>USB cable issue</li>
+              <li>Device drivers not installed</li>
+              <li>Device names are different on your system</li>
+            </ul>
+            <p><strong>Please check the actual device names listed above and report them.</strong></p>
+          `;
+        }
+
+        html += '</div>';
+
+        resultsEl.innerHTML = html;
+
+      } catch (error) {
+        resultsEl.innerHTML = `
+          <div class="error">
+            <h2>❌ Error</h2>
+            <p>${error.message}</p>
+            <pre>${error.stack}</pre>
+          </div>
+        `;
+      }
+    }
+
+    document.getElementById('scanBtn').addEventListener('click', scan);
+
+    // Auto-scan on load
+    window.addEventListener('load', () => {
+      setTimeout(scan, 500);
+    });
+  </script>
+</body>
+</html>

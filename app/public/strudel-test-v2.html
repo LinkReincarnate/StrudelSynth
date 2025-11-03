@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Strudel CDN Test v2</title>
+  <script src="https://unpkg.com/@strudel/web@1.2.6"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      background: #4a4a4a;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #5a5a5a;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .status {
+      margin: 20px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      border-radius: 4px;
+    }
+    .success { color: #4caf50; }
+    .error { color: #f44336; }
+    .warning { color: #ff9800; }
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    .overlay-content {
+      text-align: center;
+    }
+    .overlay h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    .overlay p {
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Audio init overlay (required for browser audio policy) -->
+  <div class="overlay" id="audioOverlay">
+    <div class="overlay-content">
+      <h1>🎵 Strudel Test</h1>
+      <p>Click anywhere to enable audio</p>
+      <p style="font-size: 1rem; color: #888; margin-top: 1rem;">
+        (Browser requires user interaction before audio can play)
+      </p>
+    </div>
+  </div>
+
+  <h1>🎵 Strudel CDN Integration Test v2</h1>
+
+  <div class="status" id="status">
+    <p>Status: <span id="statusText">Waiting for audio init...</span></p>
+    <p id="debugInfo" style="font-size: 0.9em; color: #888;"></p>
+  </div>
+
+  <div>
+    <button id="testSimple">Test 1: Simple Beep</button>
+    <button id="testPattern">Test 2: Pattern</button>
+    <button id="testLayer">Test 3: Layer Patterns</button>
+    <button id="stopAll">Stop All</button>
+  </div>
+
+  <h2>Test Results:</h2>
+  <ul id="results"></ul>
+
+  <h2>Debug Console:</h2>
+  <pre id="console" style="background: #000; padding: 10px; border-radius: 4px; max-height: 200px; overflow-y: auto;"></pre>
+
+  <script>
+    let activePatterns = [];
+    let strudelReady = false;
+    let audioContext = null;
+
+    const status = document.getElementById('statusText');
+    const results = document.getElementById('results');
+    const debugInfo = document.getElementById('debugInfo');
+    const consoleLog = document.getElementById('console');
+
+    function log(message, isSuccess = true) {
+      const li = document.createElement('li');
+      li.className = isSuccess ? 'success' : (message.includes('⚠️') ? 'warning' : 'error');
+      li.textContent = message;
+      results.appendChild(li);
+
+      // Also log to debug console
+      const timestamp = new Date().toLocaleTimeString();
+      consoleLog.textContent += `[${timestamp}] ${message}\n`;
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function updateStatus(text, className = 'success') {
+      status.textContent = text;
+      status.className = className;
+    }
+
+    function updateDebug(text) {
+      debugInfo.textContent = text;
+    }
+
+    // Initialize on overlay click
+    document.getElementById('audioOverlay').addEventListener('click', async function initAudio() {
+      try {
+        log('🔧 Initializing Web Audio...');
+        updateStatus('Initializing...', 'warning');
+
+        // Check if Strudel loaded
+        if (typeof initStrudel === 'undefined') {
+          throw new Error('Strudel CDN not loaded! Check network.');
+        }
+
+        log('✅ Strudel CDN loaded');
+
+        // Initialize Strudel (creates AudioContext internally)
+        log('🔧 Calling initStrudel()...');
+        await initStrudel();
+
+        strudelReady = true;
+        log('✅ Strudel initialized successfully!');
+        updateStatus('Ready! Click a test button', 'success');
+
+        // Try to get AudioContext info
+        try {
+          if (window.AudioContext || window.webkitAudioContext) {
+            log('✅ Web Audio API available');
+          }
+        } catch (e) {
+          log('⚠️ Could not check AudioContext: ' + e.message, true);
+        }
+
+        // Hide overlay
+        document.getElementById('audioOverlay').style.display = 'none';
+
+      } catch (error) {
+        log('❌ Initialization failed: ' + error.message, false);
+        log('❌ Stack: ' + error.stack, false);
+        updateStatus('Error: ' + error.message, 'error');
+        updateDebug('See console for details. Refresh page to retry.');
+      }
+    });
+
+    // Test 1: Simple beep using Web Audio directly
+    document.getElementById('testSimple').addEventListener('click', async () => {
+      try {
+        if (!strudelReady) {
+          throw new Error('Strudel not ready - click overlay first');
+        }
+
+        log('🔧 Test 1: Playing simple beep with Strudel...');
+
+        // Try a very simple pattern
+        const pattern = sound('sine');
+        pattern.play();
+        activePatterns.push(pattern);
+
+        log('✅ Pattern created and .play() called');
+        updateStatus('Playing beep... (should hear tone)');
+
+        // Auto-stop after 2 seconds
+        setTimeout(() => {
+          pattern.stop();
+          log('🔧 Beep stopped (2 sec timeout)');
+        }, 2000);
+
+      } catch (error) {
+        log('❌ Test 1 failed: ' + error.message, false);
+        log('❌ Stack: ' + error.stack, false);
+        updateStatus('Error: ' + error.message, 'error');
+      }
+    });
+
+    // Test 2: Strudel pattern
+    document.getElementById('testPattern').addEventListener('click', () => {
+      try {
+        if (!strudelReady) {
+          throw new Error('Strudel not ready');
+        }
+
+        log('🔧 Test 2: Playing Strudel pattern...');
+
+        // Try different patterns to find one that works
+        const pattern = s('bd');
+        pattern.play();
+        activePatterns.push(pattern);
+
+        log('✅ Pattern: s("bd") - kick drum');
+        updateStatus('Playing kick drum pattern');
+
+      } catch (error) {
+        log('❌ Test 2 failed: ' + error.message, false);
+        updateStatus('Error: ' + error.message, 'error');
+      }
+    });
+
+    // Test 3: Layer patterns
+    document.getElementById('testLayer').addEventListener('click', () => {
+      try {
+        if (!strudelReady) {
+          throw new Error('Strudel not ready');
+        }
+
+        log('🔧 Test 3: Layering patterns...');
+
+        const p1 = s('bd').fast(1);
+        const p2 = s('hh*4');
+
+        p1.play();
+        p2.play();
+
+        activePatterns.push(p1, p2);
+
+        log('✅ Layering: kick + hi-hat');
+        updateStatus('Playing layered drums');
+
+      } catch (error) {
+        log('❌ Test 3 failed: ' + error.message, false);
+        updateStatus('Error: ' + error.message, 'error');
+      }
+    });
+
+    // Stop all
+    document.getElementById('stopAll').addEventListener('click', () => {
+      try {
+        log('🔧 Stopping all patterns...');
+
+        activePatterns.forEach(p => {
+          try {
+            p.stop();
+          } catch (e) {
+            log('⚠️ Could not stop pattern: ' + e.message, true);
+          }
+        });
+
+        activePatterns = [];
+        log('✅ All patterns stopped');
+        updateStatus('All stopped');
+
+      } catch (error) {
+        log('❌ Stop failed: ' + error.message, false);
+      }
+    });
+
+    // Log CDN load status
+    window.addEventListener('load', () => {
+      if (typeof initStrudel !== 'undefined') {
+        log('✅ Page loaded - Strudel CDN available');
+        log('ℹ️ Click the overlay to initialize audio');
+        updateDebug('Strudel version: @strudel/web@1.2.6');
+      } else {
+        log('❌ Strudel CDN failed to load!', false);
+        updateStatus('CDN load failed - check network', 'error');
+        updateDebug('Cannot proceed without Strudel. Check browser console (F12).');
+      }
+    });
+
+    // Log any errors
+    window.addEventListener('error', (e) => {
+      log('❌ Page error: ' + e.message, false);
+    });
+  </script>
+</body>
+</html>
