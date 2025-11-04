@@ -358,6 +358,53 @@ export class PatternEngine {
   }
 
   /**
+   * Update code for a playing pattern (live code editing)
+   * This rebuilds the combined pattern immediately without stopping/starting
+   * @param slotId Slot ID (0-39)
+   * @param code New Strudel code
+   */
+  updateLiveCode(slotId: number, code: string): void {
+    if (!this.initialized) {
+      throw new Error('PatternEngine not initialized. Call initialize() first.');
+    }
+
+    const slot = this.slots.get(slotId);
+    if (!slot) {
+      throw new Error(`Slot ${slotId} not found`);
+    }
+
+    const isPlaying = this.isPlaying(slotId);
+    if (!isPlaying) {
+      throw new Error(`Pattern ${slotId} is not playing. Use updatePatternCode() for non-playing patterns.`);
+    }
+
+    try {
+      // Validate code by trying to evaluate it first
+      this.evaluatePattern(code);
+
+      // Update code in slot
+      slot.code = code;
+      slot.lastModified = Date.now();
+
+      // Update the activeSlots reference (important for rebuildCombinedPattern)
+      this.activeSlots.set(slotId, slot);
+
+      // Rebuild combined pattern with new code
+      this.rebuildCombinedPattern();
+
+      // Notify handlers
+      this.notifyStateChange(slot);
+
+      console.log(`✅ Updated live code for pattern ${slotId}`);
+    } catch (error) {
+      const err = error instanceof Error ? error : new Error('Unknown error');
+      console.error(`❌ Failed to update live code for pattern ${slotId}:`, err);
+      this.notifyError(slotId, err);
+      throw err;
+    }
+  }
+
+  /**
    * Get LED color for a slot based on its state
    * @param slotId Slot ID (0-39)
    */
