@@ -3,6 +3,29 @@
  */
 
 /**
+ * Dynamic parameter definition detected from Strudel code
+ */
+export interface DynamicParameter {
+  /** Parameter name (without $ prefix, e.g., "speed", "cutoff") */
+  name: string;
+
+  /** Current value */
+  value: number;
+
+  /** Minimum value */
+  minValue: number;
+
+  /** Maximum value */
+  maxValue: number;
+
+  /** Which knob (0-7) controls this parameter, or null if unassigned */
+  assignedKnob: number | null;
+
+  /** Display name */
+  displayName?: string;
+}
+
+/**
  * Represents a Strudel pattern in a slot
  */
 export interface PatternSlot {
@@ -27,8 +50,11 @@ export interface PatternSlot {
   /** Timestamp of last modification */
   lastModified?: number;
 
-  /** Per-pattern parameter values (8 knobs) */
+  /** Per-pattern parameter values (8 knobs) - DEPRECATED, use dynamicParameters */
   parameters?: import('./parameters').KnobParameter[];
+
+  /** Dynamic parameters detected from code */
+  dynamicParameters?: DynamicParameter[];
 }
 
 /**

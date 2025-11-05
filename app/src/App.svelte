@@ -11,7 +11,6 @@
   import { RecordingManager } from './recording/RecordingManager';
   import { KeyboardPreview } from './lib/KeyboardPreview';
   import type { PatternSlot } from './lib/types';
-  import type { KnobParameter } from './lib/parameters';
   import { LED_COLORS, SPECIAL_BUTTONS, ALL_BUTTON_NOTES } from './lib/constants';
   import { savePattern, loadCustomPatterns } from './lib/storage';
   import type { RecordingState } from './lib/types';
@@ -69,8 +68,8 @@
   let editorVisible = false;
   let editingPattern: PatternSlot | null = null;
 
-  // Parameter control state
-  let parameters: KnobParameter[] = [];
+  // Parameter control state (now handled by dynamic parameters in KnobControls)
+  let parameterRefreshCounter = 0; // Increment to force KnobControls to refresh
 
   // Recording state
   let recordingState: RecordingState = 'idle';
@@ -104,7 +103,6 @@
 
     // Load initial patterns
     patterns = patternEngine.getAllSlots();
-    parameters = patternEngine.getParameters();
 
     // Listen for pattern state changes
     patternEngine.onStateChange((slot) => {
@@ -136,8 +134,8 @@
       if (initialized) {
         // Update parameter based on knob index and delta
         patternEngine.updateParameter(event.index, event.delta);
-        // Update UI
-        parameters = patternEngine.getParameters();
+        // Force KnobControls to refresh by incrementing counter
+        parameterRefreshCounter++;
       }
     });
 
@@ -225,8 +223,12 @@
     // Set this slot as selected for parameter control
     patternEngine.selectSlot(slotId);
 
-    // Update parameter display
-    parameters = patternEngine.getParameters();
+    // Detect and initialize parameters for this slot if not already done
+    if (selectedPattern && !selectedPattern.dynamicParameters) {
+      patternEngine.detectAndInitializeParameters(slotId);
+      // Refresh selected pattern to show detected parameters
+      selectedPattern = patternEngine.getSlot(slotId) || null;
+    }
 
     try {
       const slot = patterns.find(p => p.id === slotId);
@@ -634,7 +636,12 @@
   {/if}
 
   <div class="knobs-section">
-    <KnobControls {parameters} />
+    <KnobControls
+      patternEngine={initialized ? patternEngine : null}
+      selectedSlotId={selectedPattern?.id ?? null}
+      refreshCounter={parameterRefreshCounter}
+      on:refresh={() => parameterRefreshCounter++}
+    />
   </div>
 
   <!-- Recording Status Indicator -->
