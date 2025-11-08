@@ -1,6 +1,8 @@
 <script lang="ts">
   import type { PatternSlot } from '../../lib/types';
   import { LED_COLORS } from '../../lib/constants';
+  import BlockEditor from './BlockEditor.svelte';
+  import type { BlockProgram } from '../blocks/blockTypes';
 
   export let pattern: PatternSlot | null = null;
   export let onSave: (pattern: PatternSlot) => void = () => {};
@@ -13,6 +15,10 @@
   let editCode = '';
   let editCategory = '';
   let editColor = LED_COLORS.GREEN;
+
+  // Editor mode
+  let editorMode: 'code' | 'blocks' = 'code';
+  let blockProgram: BlockProgram = { blocks: [] };
 
   // State
   let testing = false;
@@ -78,7 +84,23 @@
   function handleClose() {
     validationMessage = '';
     validationError = false;
+    editorMode = 'code'; // Reset to code mode
+    blockProgram = { blocks: [] }; // Clear blocks
     onCancel();
+  }
+
+  function handleUseBlockCode(event: CustomEvent) {
+    const { code } = event.detail;
+    editCode = code;
+    editorMode = 'code'; // Switch to code mode to show the generated code
+    validationMessage = '✅ Code generated from blocks!';
+    validationError = false;
+  }
+
+  function switchMode(mode: 'code' | 'blocks') {
+    editorMode = mode;
+    validationMessage = '';
+    validationError = false;
   }
 
   // Color options
@@ -129,21 +151,48 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="pattern-code">
-            Strudel Pattern Code
-            <span class="label-hint">
-              <a href="https://strudel.cc/" target="_blank" rel="noopener">Strudel Docs</a>
-            </span>
-          </label>
-          <textarea
-            id="pattern-code"
-            bind:value={editCode}
-            placeholder="e.g., s('bd').fast(2)"
-            rows="8"
-            spellcheck="false"
-          ></textarea>
+        <!-- Editor Mode Tabs -->
+        <div class="editor-tabs">
+          <button
+            class="tab"
+            class:active={editorMode === 'code'}
+            on:click={() => switchMode('code')}
+          >
+            💻 Code
+          </button>
+          <button
+            class="tab"
+            class:active={editorMode === 'blocks'}
+            on:click={() => switchMode('blocks')}
+          >
+            🧱 Blocks
+          </button>
         </div>
+
+        {#if editorMode === 'code'}
+          <div class="form-group">
+            <label for="pattern-code">
+              Strudel Pattern Code
+              <span class="label-hint">
+                <a href="https://strudel.cc/" target="_blank" rel="noopener">Strudel Docs</a>
+              </span>
+            </label>
+            <textarea
+              id="pattern-code"
+              bind:value={editCode}
+              placeholder="e.g., s('bd').fast(2)"
+              rows="8"
+              spellcheck="false"
+            ></textarea>
+          </div>
+        {:else}
+          <div class="block-editor-container">
+            <BlockEditor
+              bind:program={blockProgram}
+              on:useCode={handleUseBlockCode}
+            />
+          </div>
+        {/if}
 
         {#if validationMessage}
           <div class="validation-message" class:error={validationError}>
@@ -187,13 +236,50 @@
     background: #1a1a1a;
     border-radius: 12px;
     border: 2px solid #333;
-    max-width: 700px;
+    max-width: 1200px;
     width: 100%;
     max-height: 90vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .editor-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .tab {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .tab:hover {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .tab.active {
+    color: #00d9ff;
+    border-bottom-color: #00d9ff;
+  }
+
+  .block-editor-container {
+    height: 500px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   .editor-header {

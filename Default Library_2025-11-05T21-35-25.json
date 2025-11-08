@@ -1,0 +1,3976 @@
+{
+  "version": "1.0",
+  "timestamp": "2025-11-05T21:35:25.674Z",
+  "library": {
+    "name": "Default Library",
+    "slots": [
+      {
+        "id": 32,
+        "code": "s(\"bd sd\").fast($speed).gain($volume).lpf($cutoff * 1000).crush($crush).coarse($coarse)",
+        "name": "Recorded 12:42:34 AM",
+        "category": "recorded",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ],
+        "lastModified": 1762378520500,
+        "dynamicParameters": [
+          {
+            "name": "speed",
+            "value": 2.05,
+            "minValue": 0.1,
+            "maxValue": 4,
+            "assignedKnob": null,
+            "displayName": "Speed"
+          },
+          {
+            "name": "volume",
+            "value": 0.5,
+            "minValue": 0,
+            "maxValue": 1,
+            "assignedKnob": null,
+            "displayName": "Volume"
+          },
+          {
+            "name": "cutoff",
+            "value": 0.5,
+            "minValue": 0,
+            "maxValue": 1,
+            "assignedKnob": null,
+            "displayName": "Cutoff"
+          },
+          {
+            "name": "crush",
+            "value": 5.118110236220474,
+            "minValue": 0,
+            "maxValue": 16,
+            "assignedKnob": 0,
+            "displayName": "Bit Crush"
+          },
+          {
+            "name": "coarse",
+            "value": 8.244094488188976,
+            "minValue": 1,
+            "maxValue": 32,
+            "assignedKnob": 1,
+            "displayName": "Sample Rate"
+          }
+        ]
+      },
+      {
+        "id": 33,
+        "code": "note(\"a3 c4 e4 a4\").s(\"gtr\").fast($speed).gain($volume)",
+        "name": "A Minor Chord",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ],
+        "lastModified": 1762378101204
+      },
+      {
+        "id": 34,
+        "code": "note(\"c4 d4 e4 g4 a4 g4 e4 d4\").slow(2).s(\"sine\")",
+        "name": "C Major Scale",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 35,
+        "code": "note(\"c4 e4 g4 b4 c5\").fast(4).s(\"triangle\")",
+        "name": "Arpeggio Up",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 36,
+        "code": "note(\"<c4 e4 g4>*4\").s(\"sawtooth\").lpf(800)",
+        "name": "Filtered Chord",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 37,
+        "code": "note(\"c5 c5 g4 g4 a4 a4 g4\").slow(2).s(\"arpy\")",
+        "name": "Twinkle Melody",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 38,
+        "code": "note(\"c4 eb4 g4\").s(\"casio\").fast(2)",
+        "name": "C Minor Fast",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 39,
+        "code": "note(\"c4 d4 e4 f4 g4 a4 b4 c5\").fast(8).s(\"sine\")",
+        "name": "Fast Scale Run",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 24,
+        "code": "note(\"<[36 48]*4 [34 46]*4 [41 53]*4 [39 51]*4>\")",
+        "name": "Kick Drum x2",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ],
+        "lastModified": 1762378101204
+      },
+      {
+        "id": 25,
+        "code": "s(\"bd sd\")",
+        "name": "Kick-Snare",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 26,
+        "code": "s(\"bd*2 sd\")",
+        "name": "Double Kick",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "code": "s(\"bd bd bd bd \")",
+        "name": "Four on Floor",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ],
+        "lastModified": 1762378101204
+      },
+      {
+        "id": 28,
+        "code": "note(\"c2 c2 eb2 g2\").s(\"sawtooth\").lpf(800)",
+        "name": "Bass Line",
+        "category": "bass",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 29,
+        "code": "note(\"c2\").s(\"sawtooth\").fast(4)",
+        "name": "Bass Pulse",
+        "category": "bass",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 30,
+        "code": "note(\"c2 ~ eb2 ~\").s(\"triangle\")",
+        "name": "Sub Bass",
+        "category": "bass",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 31,
+        "code": "note(\"c2 g1 c2 g1\").s(\"sawtooth\").lpf(400)",
+        "name": "Deep Bass",
+        "category": "bass",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 16,
+        "code": "s(\"hh*8\")",
+        "name": "Hi-Hat 8th",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "code": "s(\"hh*16\").fast(0.5)",
+        "name": "Hi-Hat 16th",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "code": "s(\"cp, rm*4\")",
+        "name": "Clap + Rim",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 19,
+        "code": "s(\"~ cp\")",
+        "name": "Clap on 2",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 20,
+        "code": "s(\"perc*4\").fast(2)",
+        "name": "Percussion Loop",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "code": "s(\"oh ~ oh ~\")",
+        "name": "Open Hi-Hat",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 22,
+        "code": "s(\"rm*4\")",
+        "name": "Rim Shots",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "code": "s(\"tabla*8\").fast(2)",
+        "name": "Fast Tabla",
+        "category": "drums",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "code": "sound(\"sine\").note(\"c3\").lpf(600)",
+        "name": "Filtered Sine",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "code": "sound(\"sawtooth\").note(\"<c3 e3 g3>\").fast(2)",
+        "name": "Saw Chord",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "code": "sound(\"square\").note(\"c4 e4 g4\").slow(2)",
+        "name": "Square Wave",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "code": "sound(\"triangle\").note(\"c4\").fast(8).lpf(1200)",
+        "name": "Triangle Pulse",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "code": "s(\"pad\").note(\"c3 e3 g3\").slow(4)",
+        "name": "Pad Slow",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 13,
+        "code": "s(\"space\").slow(2)",
+        "name": "Space Ambient",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "code": "s(\"wind\").fast(0.5)",
+        "name": "Wind Texture",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "code": "s(\"noise\").lpf(400).hpf(200)",
+        "name": "Filtered Noise",
+        "category": "texture",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 0,
+        "code": "s(\"bd sd\").fast(2).rev()",
+        "name": "Reversed Beat",
+        "category": "effect",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 1,
+        "code": "note(\"c4 e4 g4\").s(\"arpy\").jux(rev)",
+        "name": "Stereo Reverse",
+        "category": "effect",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "code": "s(\"bd hh sd hh\").fast(2)",
+        "name": "Full Beat",
+        "category": "combo",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "code": "note(\"c2 c2 eb2 g2\").s(\"sawtooth\").fast($speed).gain($volume).lpf($cutoff * 1000)",
+        "name": "Bass + Filter",
+        "category": "combo",
+        "ledColor": 96,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ],
+        "lastModified": 1762378101204
+      },
+      {
+        "id": 4,
+        "code": "s(\"bd*4, hh*8, ~ cp\")",
+        "name": "Layered Drums",
+        "category": "combo",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "code": "note(\"<c4 e4 g4 c5>*4\").s(\"sine\").lpf(1200)",
+        "name": "Melodic Pulse",
+        "category": "combo",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "code": "s(\"bd sd, hh*16\").fast(2)",
+        "name": "Breakbeat",
+        "category": "combo",
+        "ledColor": 5,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "code": "note(\"c4 d4 e4 g4\").s(\"gtr\").slow(4)",
+        "name": "Slow Melody",
+        "category": "melody",
+        "ledColor": 13,
+        "isPlaying": false,
+        "parameters": [
+          {
+            "id": 0,
+            "cc": 48,
+            "name": "Volume",
+            "description": "Master volume",
+            "strudelFunction": "gain",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0.7,
+            "currentValue": 0.7
+          },
+          {
+            "id": 1,
+            "cc": 49,
+            "name": "Speed",
+            "description": "Playback speed",
+            "strudelFunction": "speed",
+            "minValue": 0.25,
+            "maxValue": 4,
+            "defaultValue": 1,
+            "currentValue": 1
+          },
+          {
+            "id": 2,
+            "cc": 50,
+            "name": "Low-Pass",
+            "description": "Low-pass filter cutoff",
+            "strudelFunction": "lpf",
+            "minValue": 100,
+            "maxValue": 10000,
+            "defaultValue": 5000,
+            "currentValue": 5000
+          },
+          {
+            "id": 3,
+            "cc": 51,
+            "name": "High-Pass",
+            "description": "High-pass filter cutoff",
+            "strudelFunction": "hpf",
+            "minValue": 0,
+            "maxValue": 2000,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 4,
+            "cc": 52,
+            "name": "Reverb",
+            "description": "Reverb room size",
+            "strudelFunction": "room",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 5,
+            "cc": 53,
+            "name": "Delay",
+            "description": "Delay amount",
+            "strudelFunction": "delay",
+            "minValue": 0,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 6,
+            "cc": 54,
+            "name": "Pan",
+            "description": "Stereo panning",
+            "strudelFunction": "pan",
+            "minValue": -1,
+            "maxValue": 1,
+            "defaultValue": 0,
+            "currentValue": 0
+          },
+          {
+            "id": 7,
+            "cc": 55,
+            "name": "Crush",
+            "description": "Bit crusher",
+            "strudelFunction": "crush",
+            "minValue": 1,
+            "maxValue": 16,
+            "defaultValue": 16,
+            "currentValue": 16
+          }
+        ]
+      }
+    ]
+  }
+}

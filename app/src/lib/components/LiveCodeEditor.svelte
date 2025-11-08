@@ -1,9 +1,16 @@
 <script lang="ts">
   import type { PatternSlot } from '../types';
+  import BlockEditor from './BlockEditor.svelte';
+  import type { BlockProgram } from '../blocks/blockTypes';
 
   export let playingPatterns: PatternSlot[] = [];
   export let onEvaluate: (slotId: number, code: string) => void = () => {};
   export let onStop: (slotId: number) => void = () => {};
+
+  // Editor mode
+  let editorMode: 'code' | 'blocks' = 'code';
+  let blockProgram: BlockProgram = { blocks: [] };
+  let selectedPatternForBlocks: number | null = null;
 
   // State
   let editingCode: Map<number, string> = new Map();
@@ -85,18 +92,85 @@
     if (pattern.ledColor === 96) return '#ffa500'; // yellow
     return '#888';
   }
+
+  function switchMode(mode: 'code' | 'blocks') {
+    editorMode = mode;
+    // If switching to blocks and we have playing patterns, select the first one by default
+    if (mode === 'blocks' && playingPatterns.length > 0 && !selectedPatternForBlocks) {
+      selectedPatternForBlocks = playingPatterns[0].id;
+    }
+  }
+
+  function handleUseBlockCode(event: CustomEvent) {
+    const { code } = event.detail;
+
+    // If no pattern selected, alert user
+    if (selectedPatternForBlocks === null) {
+      if (playingPatterns.length === 0) {
+        alert('Start a pattern first before using block-generated code');
+      } else {
+        alert('Please select a pattern to apply the block code to');
+      }
+      return;
+    }
+
+    // Apply the generated code to the selected pattern
+    updateCode(selectedPatternForBlocks, code);
+    handleEvaluate(selectedPatternForBlocks);
+
+    // Switch to code mode to show the result
+    editorMode = 'code';
+  }
 </script>
 
 <div class="live-code-editor">
   <div class="editor-header">
     <h2>🎹 Live Code</h2>
-    <div class="hints">
-      <span class="hint">Ctrl+Enter = Evaluate</span>
-      <span class="hint">Ctrl+. = Stop</span>
+    <div class="editor-tabs">
+      <button
+        class="tab"
+        class:active={editorMode === 'code'}
+        on:click={() => switchMode('code')}
+      >
+        💻 Code
+      </button>
+      <button
+        class="tab"
+        class:active={editorMode === 'blocks'}
+        on:click={() => switchMode('blocks')}
+      >
+        🧱 Blocks
+      </button>
     </div>
+    {#if editorMode === 'code'}
+      <div class="hints">
+        <span class="hint">Ctrl+Enter = Evaluate</span>
+        <span class="hint">Ctrl+. = Stop</span>
+      </div>
+    {/if}
   </div>
 
-  {#if playingPatterns.length === 0}
+  {#if editorMode === 'blocks'}
+    <div class="blocks-mode">
+      {#if playingPatterns.length > 0}
+        <div class="pattern-selector">
+          <label for="target-pattern">Apply blocks to:</label>
+          <select id="target-pattern" bind:value={selectedPatternForBlocks}>
+            {#each playingPatterns as pattern}
+              <option value={pattern.id}>#{pattern.id} - {pattern.name}</option>
+            {/each}
+          </select>
+        </div>
+      {/if}
+
+      <div class="block-editor-container">
+        <BlockEditor
+          bind:program={blockProgram}
+          on:useCode={handleUseBlockCode}
+        />
+      </div>
+    </div>
+  {:else if playingPatterns.length === 0}
     <div class="empty-state">
       <p class="empty-icon">🎵</p>
       <p>No patterns playing</p>
@@ -179,6 +253,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
   }
 
   .editor-header h2 {
@@ -187,15 +263,95 @@
     color: #4caf50;
   }
 
+  .editor-tabs {
+    display: flex;
+    gap: 4px;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .tab:hover {
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .tab.active {
+    color: #00d9ff;
+    border-bottom-color: #00d9ff;
+  }
+
   .hints {
     display: flex;
     gap: 15px;
+    margin-left: auto;
   }
 
   .hint {
     font-size: 12px;
     color: #666;
     font-family: 'Courier New', monospace;
+  }
+
+  .blocks-mode {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .pattern-selector {
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pattern-selector label {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+  }
+
+  .pattern-selector select {
+    flex: 1;
+    max-width: 400px;
+    padding: 8px 12px;
+    background: #0a0a0a;
+    border: 2px solid #333;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .pattern-selector select:hover {
+    border-color: #4caf50;
+  }
+
+  .pattern-selector select:focus {
+    outline: none;
+    border-color: #4caf50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  }
+
+  .block-editor-container {
+    flex: 1;
+    overflow: hidden;
   }
 
   .empty-state {

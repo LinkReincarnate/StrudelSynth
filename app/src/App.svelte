@@ -14,6 +14,15 @@
   import { LED_COLORS, SPECIAL_BUTTONS, ALL_BUTTON_NOTES } from './lib/constants';
   import { savePattern, loadCustomPatterns } from './lib/storage';
   import type { RecordingState } from './lib/types';
+  import {
+    downloadLibrary,
+    uploadLibrary,
+    saveToLocalStorage,
+    loadFromLocalStorage,
+    hasAutoSave,
+    exportPattern,
+    importPattern
+  } from './lib/saveLoad';
 
   // State
   let patternEngine: PatternEngine;
@@ -85,7 +94,18 @@
     recordingManager = new RecordingManager();
     keyboardPreview = new KeyboardPreview();
 
-    // Load custom patterns from localStorage
+    // Check for auto-save and offer to restore
+    const autoSave = loadFromLocalStorage();
+    if (autoSave && hasAutoSave()) {
+      // Ask user if they want to restore
+      const restore = confirm('Found an auto-saved session. Would you like to restore it?');
+      if (restore) {
+        patternEngine.loadLibraryFromSave(autoSave);
+        console.log('✅ Restored auto-saved library');
+      }
+    }
+
+    // Load custom patterns from localStorage (legacy support)
     const customPatterns = loadCustomPatterns();
     customPatterns.forEach(pattern => {
       try {
@@ -306,8 +326,12 @@
         slot.ledColor = updatedPattern.ledColor;
       }
 
-      // Save to localStorage
+      // Save to localStorage (legacy)
       savePattern(updatedPattern);
+
+      // Auto-save entire library
+      const library = patternEngine.getLibrary();
+      saveToLocalStorage(library);
 
       // Update state
       patterns = patternEngine.getAllSlots();
@@ -358,6 +382,117 @@
   function handleCancelEdit() {
     editorVisible = false;
     editingPattern = null;
+  }
+
+  /**
+   * Save entire library to file
+   */
+  function handleSaveLibrary() {
+    if (!initialized) {
+      alert('Please initialize the system first!');
+      return;
+    }
+
+    try {
+      const library = patternEngine.getLibrary();
+      downloadLibrary(library);
+
+      // Also save to localStorage as auto-save
+      saveToLocalStorage(library);
+    } catch (error) {
+      console.error('Failed to save library:', error);
+      alert(`Failed to save library: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Load library from file
+   */
+  async function handleLoadLibrary() {
+    if (!initialized) {
+      alert('Please initialize the system first!');
+      return;
+    }
+
+    try {
+      const library = await uploadLibrary();
+
+      // Load into pattern engine
+      patternEngine.loadLibraryFromSave(library);
+
+      // Update state
+      patterns = patternEngine.getAllSlots();
+      playingPatterns = [];
+      selectedPattern = null;
+
+      // Clear LEDs
+      midiManager.clearLEDs();
+
+      // Save as auto-save
+      saveToLocalStorage(library);
+
+      console.log(`✅ Loaded library: ${library.name}`);
+    } catch (error) {
+      console.error('Failed to load library:', error);
+      if (error instanceof Error && error.message !== 'File selection cancelled') {
+        alert(`Failed to load library: ${error.message}`);
+      }
+    }
+  }
+
+  /**
+   * Export single pattern to file
+   */
+  function handleExportPattern() {
+    if (!selectedPattern) {
+      alert('Please select a pattern first!');
+      return;
+    }
+
+    try {
+      exportPattern(selectedPattern);
+    } catch (error) {
+      console.error('Failed to export pattern:', error);
+      alert(`Failed to export pattern: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Import single pattern from file
+   */
+  async function handleImportPattern() {
+    if (!selectedPattern) {
+      alert('Please select a pattern slot first!');
+      return;
+    }
+
+    try {
+      const importedPattern = await importPattern();
+
+      // Stop pattern if playing
+      if (patternEngine.isPlaying(selectedPattern.id)) {
+        patternEngine.stopPattern(selectedPattern.id);
+        midiManager.setLED(selectedPattern.id, LED_COLORS.OFF);
+      }
+
+      // Update slot with imported data
+      patternEngine.updateSlotFromImport(selectedPattern.id, importedPattern);
+
+      // Auto-save entire library
+      const library = patternEngine.getLibrary();
+      saveToLocalStorage(library);
+
+      // Update state
+      patterns = patternEngine.getAllSlots();
+      selectedPattern = patternEngine.getSlot(selectedPattern.id);
+
+      console.log(`✅ Imported pattern to slot ${selectedPattern.id}`);
+    } catch (error) {
+      console.error('Failed to import pattern:', error);
+      if (error instanceof Error && error.message !== 'File selection cancelled') {
+        alert(`Failed to import pattern: ${error.message}`);
+      }
+    }
   }
 
   /**
@@ -589,8 +724,30 @@
 
 <main>
   <header>
-    <h1>🎵 StrudelSynth</h1>
-    <p class="subtitle">APCKEY25 mk2 Pattern Controller</p>
+    <div class="header-content">
+      <div class="header-title">
+        <h1>🎵 StrudelSynth</h1>
+        <p class="subtitle">APCKEY25 mk2 Pattern Controller</p>
+      </div>
+      {#if initialized}
+        <div class="header-actions">
+          <button class="action-btn save-btn" on:click={handleSaveLibrary} title="Save entire library to file">
+            💾 Save Library
+          </button>
+          <button class="action-btn load-btn" on:click={handleLoadLibrary} title="Load library from file">
+            📁 Load Library
+          </button>
+          {#if selectedPattern}
+            <button class="action-btn export-btn" on:click={handleExportPattern} title="Export current pattern">
+              📤 Export Pattern
+            </button>
+            <button class="action-btn import-btn" on:click={handleImportPattern} title="Import pattern to current slot">
+              📥 Import Pattern
+            </button>
+          {/if}
+        </div>
+      {/if}
+    </div>
   </header>
 
   <StatusBar
@@ -759,9 +916,23 @@
   }
 
   header {
-    text-align: center;
     padding: 30px 20px 20px;
     background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
+  }
+
+  .header-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .header-title {
+    text-align: center;
+    flex: 1;
   }
 
   header h1 {
@@ -774,6 +945,66 @@
     margin: 10px 0 0;
     font-size: 16px;
     color: #888;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 2px solid;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    font-family: inherit;
+  }
+
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .action-btn:active {
+    transform: translateY(0);
+  }
+
+  .save-btn {
+    border-color: #4caf50;
+  }
+
+  .save-btn:hover {
+    background: rgba(76, 175, 80, 0.2);
+  }
+
+  .load-btn {
+    border-color: #2196f3;
+  }
+
+  .load-btn:hover {
+    background: rgba(33, 150, 243, 0.2);
+  }
+
+  .export-btn {
+    border-color: #ff9800;
+  }
+
+  .export-btn:hover {
+    background: rgba(255, 152, 0, 0.2);
+  }
+
+  .import-btn {
+    border-color: #9c27b0;
+  }
+
+  .import-btn:hover {
+    background: rgba(156, 39, 176, 0.2);
   }
 
   .keyboard-preview-controls {

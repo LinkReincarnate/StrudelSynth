@@ -171,21 +171,29 @@ export function injectParameterValues(code: string, parameters: DynamicParameter
 }
 
 /**
- * Snap value to nearest whole number if close enough
- * @param value Current value
- * @param snapThreshold How close to whole number to trigger snap (default 0.05)
+ * Snap value to nearest whole number if close enough (directional snapping)
+ * Only snaps when moving TOWARD a whole number, prevents getting stuck
+ *
+ * @param oldValue Previous value
+ * @param newValue New value after delta applied
+ * @param snapThreshold How close to whole number to trigger snap (default 0.08)
  * @returns Snapped value
  */
-function snapToWholeNumber(value: number, snapThreshold: number = 0.05): number {
-  const nearestWhole = Math.round(value);
-  const distance = Math.abs(value - nearestWhole);
+function snapToWholeNumber(oldValue: number, newValue: number, snapThreshold: number = 0.08): number {
+  const nearestWhole = Math.round(newValue);
+  const newDistance = Math.abs(newValue - nearestWhole);
+  const oldDistance = Math.abs(oldValue - nearestWhole);
 
-  // If within threshold of a whole number, snap to it
-  if (distance <= snapThreshold) {
+  // Only snap if:
+  // 1. We're within the snap threshold
+  // 2. We're moving TOWARD the whole number (getting closer)
+  // This prevents getting stuck - if you're at 1.0 and move away, oldDistance is 0
+  // and newDistance will be > 0, so we won't snap
+  if (newDistance <= snapThreshold && newDistance < oldDistance) {
     return nearestWhole;
   }
 
-  return value;
+  return newValue;
 }
 
 /**
@@ -200,13 +208,14 @@ export function updateParameterFromKnob(param: DynamicParameter, delta: number):
   const range = param.maxValue - param.minValue;
   const stepSize = range / 127; // 127 steps across full range
 
-  let newValue = param.value + (delta * stepSize);
+  const oldValue = param.value;
+  let newValue = oldValue + (delta * stepSize);
 
   // Clamp to range
   newValue = Math.max(param.minValue, Math.min(param.maxValue, newValue));
 
-  // Snap to whole numbers when close
-  newValue = snapToWholeNumber(newValue);
+  // Snap to whole numbers when approaching them (prevents getting stuck)
+  newValue = snapToWholeNumber(oldValue, newValue);
 
   return {
     ...param,

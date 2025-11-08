@@ -863,4 +863,61 @@ export class PatternEngine {
       this.rebuildCombinedPattern();
     }
   }
+
+  /**
+   * Get the current pattern library for saving
+   * @returns Complete pattern library with all slots
+   */
+  getLibrary(): PatternLibrary {
+    return {
+      name: this.library.name,
+      description: this.library.description,
+      slots: this.getAllSlots()
+    };
+  }
+
+  /**
+   * Load a pattern library from saved data
+   * Stops all playing patterns first
+   * @param library Pattern library to load
+   */
+  loadLibraryFromSave(library: PatternLibrary): void {
+    // Stop all patterns
+    this.stopAll();
+
+    // Load the new library
+    this.loadLibrary(library);
+
+    console.log(`📂 Loaded library: ${library.name} (${library.slots.length} patterns)`);
+  }
+
+  /**
+   * Update a single slot from imported data
+   * Preserves the slot ID, replaces content
+   * @param slotId Slot ID to update
+   * @param importedSlot Imported slot data
+   */
+  updateSlotFromImport(slotId: number, importedSlot: PatternSlot): void {
+    const slot = this.slots.get(slotId);
+    if (!slot) {
+      throw new Error(`Slot ${slotId} not found`);
+    }
+
+    // Stop if playing
+    if (this.activeSlots.has(slotId)) {
+      this.stopPattern(slotId);
+    }
+
+    // Update slot content (preserve ID)
+    slot.name = importedSlot.name;
+    slot.code = importedSlot.code;
+    slot.color = importedSlot.color;
+    slot.parameters = importedSlot.parameters;
+    slot.dynamicParameters = importedSlot.dynamicParameters;
+
+    console.log(`📥 Updated slot ${slotId} from import: ${slot.name}`);
+
+    // Trigger state change
+    this.notifyStateChange(slot);
+  }
 }
